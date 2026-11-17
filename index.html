@@ -1,0 +1,1152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cracked Rankings</title>
+<meta name="description" content="A world ranking of how cracked people in tech and AI are, scored from their careers. Rate yourself too.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a66c2'/%3E%3Ctext x='16' y='23' font-family='Arial' font-weight='700' font-size='20' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<style>body{margin:0}</style>
+</head>
+<body>
+<style>
+/* Layout: a professional-network feed. White top bar (logo, search, icon tabs), three columns on the rankings page
+   (summary card, ranked list, news rail), profile pages with banner + overlapping avatar. Light theme only, by design. */
+:root {
+  color-scheme: light;
+  --bg: #f4f2ee; --surface: #ffffff; --text: rgba(0,0,0,.9); --muted: rgba(0,0,0,.6); --faint: rgba(0,0,0,.45); --line: #e8e6e1;
+  --accent: #0a66c2; --accent-hover: #004182; --accent-soft: #ebf3fb; --field: #edf3f8;
+  --up: #057642; --up-soft: #e3f3ea; --down: #b24020; --down-soft: #fbeae5; --gold: #915907; --gold-soft: #fbf1dc;
+  --hover: rgba(0,0,0,.05); --shadow: 0 0 0 1px rgba(0,0,0,.08);
+  --font: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, sans-serif;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.43; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+a { color: var(--accent); text-decoration: none; font-weight: 600; }
+a:hover { text-decoration: underline; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.gut { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 1128px; margin: 0 auto; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* Top bar */
+nav.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+nav.top .inner { display: flex; align-items: center; gap: 8px; min-height: 52px; }
+.logo { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; font-size: 19px; }
+.logo:hover { text-decoration: none; background: var(--accent-hover); }
+.search { flex: 1 1 200px; max-width: 300px; min-width: 0; display: flex; align-items: center; gap: 8px; background: var(--field); border-radius: 4px; padding: 0 10px; height: 34px; color: var(--muted); }
+.search:focus-within { box-shadow: 0 0 0 2px var(--text); max-width: 380px; }
+.search svg { flex: none; width: 16px; height: 16px; fill: currentColor; }
+.search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; color: var(--text); }
+.tabs { margin-left: auto; display: flex; align-self: stretch; }
+.tabs a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 76px; padding: 0 8px; color: var(--muted); font-size: 12px; font-weight: 400; border-bottom: 2px solid transparent; }
+.tabs a svg { width: 24px; height: 24px; fill: currentColor; }
+.tabs a:hover { color: var(--text); text-decoration: none; }
+.tabs a[aria-current="page"] { color: var(--text); border-bottom-color: var(--text); }
+@media (max-width: 520px) { .tabs a { min-width: 52px; } .tabs a span { display: none; } }
+
+main { padding-block: 24px 64px; }
+.card { background: var(--surface); border-radius: 8px; box-shadow: var(--shadow); min-width: 0; overflow: hidden; }
+.pad { padding: 16px; }
+.card h2 { margin: 0; font-size: 16px; font-weight: 600; }
+.card h1 { margin: 0; font-size: 24px; font-weight: 600; line-height: 1.25; text-wrap: balance; }
+.muted { color: var(--muted); } .small { font-size: 12px; }
+.stack { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 16px 16px 8px; }
+.empty { color: var(--muted); margin: 0; padding: 4px 16px 16px; }
+.avatar { flex: none; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 17px; color: #fff; }
+img.avatar { object-fit: cover; object-position: 50% 22%; }
+.btn { display: inline-flex; align-items: center; justify-content: center; border: 0; box-shadow: inset 0 0 0 1px var(--accent); background: transparent; color: var(--accent); border-radius: 999px; padding: 6px 16px; cursor: pointer; font-weight: 600; font-size: 16px; line-height: 1.25; }
+.btn:hover { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent-hover); color: var(--accent-hover); text-decoration: none; }
+.btn.primary { background: var(--accent); color: #fff; box-shadow: none; }
+.btn.primary:hover { background: var(--accent-hover); color: #fff; }
+.btn.quiet { box-shadow: inset 0 0 0 1px var(--muted); color: var(--muted); }
+.btn.quiet:hover { background: var(--hover); box-shadow: inset 0 0 0 2px var(--muted); color: var(--text); }
+.chip { font-weight: 600; font-size: 12px; border-radius: 4px; padding: 1px 6px; white-space: nowrap; display: inline-block; font-variant-numeric: tabular-nums; }
+.chip.up { color: var(--up); background: var(--up-soft); }
+.chip.down { color: var(--down); background: var(--down-soft); }
+.chip.flat { color: var(--faint); background: var(--hover); }
+.tier { font-weight: 700; font-size: 11px; border-radius: 3px; padding: 0 5px; display: inline-block; min-width: 22px; text-align: center; line-height: 18px; }
+.t-Sp { color: var(--gold); background: var(--gold-soft); } .t-S { color: #7a3e9d; background: #f3e9f8; } .t-A { color: var(--accent); background: var(--accent-soft); }
+.t-B { color: #1f6f66; background: #e2f2ef; } .t-C { color: #5c6420; background: #eef0dc; } .t-D { color: #7a5a3a; background: #f3ebe1; } .t-Z { color: var(--muted); background: var(--hover); }
+kbd { font: 11px ui-monospace, Menlo, monospace; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--surface); }
+
+/* Rankings: three columns */
+.cols { display: grid; grid-template-columns: 225px minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+@media (max-width: 1040px) { .cols { grid-template-columns: 225px minmax(0, 1fr); } .cols > .rail { grid-column: 1 / -1; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
+@media (max-width: 720px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+.mini .strip { height: 56px; background: linear-gradient(120deg, #a0b4b7, #c9d8da 45%, #dfe7ef); }
+.mini .logo { width: 72px; height: 72px; font-size: 38px; margin: -38px auto 0; border: 2px solid var(--surface); }
+.mini .t { text-align: center; padding: 12px 12px 16px; border-bottom: 1px solid var(--line); }
+.mini .t b { display: block; font-size: 16px; }
+.kv { display: flex; justify-content: space-between; gap: 8px; padding: 4px 12px; font-size: 12px; color: var(--muted); font-weight: 600; }
+.kv b { color: var(--accent); font-variant-numeric: tabular-nums; }
+.menu { display: grid; padding: 8px 0; max-height: 62vh; overflow-y: auto; }
+.menu button { display: flex; justify-content: space-between; gap: 8px; }
+.menu .c { font-weight: 400; opacity: .7; }
+.tick { display: inline-block; vertical-align: -1px; width: 13px; height: 13px; fill: var(--accent); margin-left: 3px; }
+.corow { display: grid; grid-template-columns: 26px auto minmax(0,1fr) auto; gap: 10px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); color: var(--text); font-weight: 400; }
+.corow:first-of-type { border-top: 0; }
+.corow:hover { background: var(--hover); text-decoration: none; }
+.corow .rank { color: var(--muted); font-weight: 600; text-align: center; font-variant-numeric: tabular-nums; }
+.corow b { display: block; font-weight: 600; }
+.corow small { display: block; color: var(--muted); }
+.colg { width: 40px; height: 40px; border-radius: 6px; display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.menu button { text-align: left; border: 0; background: transparent; padding: 8px 12px 8px 14px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--muted); border-left: 3px solid transparent; }
+.menu button:hover { background: var(--hover); color: var(--text); }
+.menu button[aria-pressed="true"] { color: var(--accent); border-left-color: var(--accent); background: var(--accent-soft); }
+@media (max-width: 720px) { .menu { display: flex; flex-wrap: wrap; padding: 8px; gap: 4px; } .menu button { border-left: 0; border-radius: 999px; padding: 6px 12px; } }
+.row { display: grid; grid-template-columns: 34px auto minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 16px; color: var(--text); font-weight: 400; border-top: 1px solid var(--line); }
+.row:hover { background: var(--hover); text-decoration: none; }
+.row .rank { font-size: 16px; font-weight: 600; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
+.row.top3 .rank { color: var(--gold); }
+.row .info { min-width: 0; }
+.row .info b { display: block; font-size: 16px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row:hover .info b { color: var(--accent); text-decoration: underline; }
+.row .info span { display: block; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .info .tier { display: inline-block; overflow: visible; }
+.row .info .co { font-size: 12px; margin-top: 2px; }
+.row .score { text-align: right; display: grid; gap: 2px; justify-items: end; }
+.row .score b { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.more { display: block; width: 100%; border: 0; border-top: 1px solid var(--line); background: transparent; padding: 12px; cursor: pointer; font-weight: 600; font-size: 16px; color: var(--muted); }
+.more:hover { background: var(--hover); color: var(--text); }
+.rail { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.news { list-style: none; margin: 0; padding: 0 0 8px; }
+.news a { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; padding: 6px 16px; color: var(--text); font-weight: 400; }
+.news a:hover { background: var(--hover); text-decoration: none; }
+.news b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.news small { grid-column: 1 / -1; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sect { padding: 8px 16px 2px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.moves { list-style: none; margin: 0; padding: 0 16px 16px; display: grid; gap: 12px; }
+.moves li { display: grid; gap: 2px; }
+
+/* Vote */
+.narrow { max-width: 880px; margin: 0 auto; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 16px; align-items: stretch; }
+.vs { align-self: center; font-weight: 700; color: var(--muted); background: var(--surface); box-shadow: var(--shadow); border-radius: 50%; width: 44px; height: 44px; display: grid; place-items: center; }
+@media (max-width: 640px) { .pair { grid-template-columns: minmax(0, 1fr); } .vs { justify-self: center; } }
+.pick { position: relative; text-align: left; border: 0; padding: 0 0 16px; cursor: pointer; display: grid; grid-template-rows: auto auto 1fr auto auto; gap: 12px; background: var(--surface); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; min-width: 0; transition: box-shadow .12s ease; }
+.pick:hover { box-shadow: 0 0 0 2px var(--accent), 0 6px 18px rgba(0,0,0,.1); }
+.pick .banner { height: 72px; }
+.pick > :not(.banner):not(.pop) { margin-inline: 16px; }
+.pick .id { margin-top: -52px; }
+.pick .avatar { width: 88px; height: 88px; font-size: 32px; border: 3px solid var(--surface); margin-bottom: 8px; }
+.pick .id b { display: block; font-size: 20px; font-weight: 600; line-height: 1.25; }
+.pick .id span:not(.avatar) { display: block; color: var(--muted); }
+.pick .foot { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 12px; color: var(--muted); font-size: 12px; }
+.pick .foot b { font-size: 18px; color: var(--text); font-variant-numeric: tabular-nums; }
+.pick .btn { pointer-events: none; }
+.pick.win { box-shadow: 0 0 0 3px var(--up); }
+.pick.lose { opacity: .5; }
+.pop { position: absolute; top: 12px; right: 12px; font-weight: 700; font-size: 15px; background: var(--surface); border-radius: 4px; padding: 2px 8px; }
+.pop.up { color: var(--up); } .pop.down { color: var(--down); }
+.xp { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; align-content: start; }
+.xp li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: start; }
+.xp .lg { width: 32px; height: 32px; border-radius: 4px; display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+.xp b { display: block; font-weight: 600; }
+.xp span { display: block; color: var(--muted); font-size: 12px; }
+.xp li.past b { font-weight: 400; }
+.feed { list-style: none; margin: 0; padding: 0 16px 16px; display: grid; gap: 8px; color: var(--muted); }
+.feed b { color: var(--text); }
+
+/* Profile */
+.pcols { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+@media (max-width: 900px) { .pcols { grid-template-columns: minmax(0, 1fr); } }
+.hero .banner { height: clamp(100px, 18vw, 200px); }
+.hero .body { padding: 0 24px 24px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: end; }
+.hero .avatar { width: 152px; height: 152px; font-size: 56px; border: 4px solid var(--surface); margin-top: -100px; margin-bottom: 12px; }
+.hero .hl { font-size: 16px; margin: 2px 0 0; }
+.hero .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.bigcr { text-align: right; }
+.bigcr b { display: block; font-size: 44px; line-height: 1; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) { .hero .body { grid-template-columns: minmax(0, 1fr); } .hero .avatar { width: 104px; height: 104px; font-size: 38px; margin-top: -64px; } .bigcr { text-align: left; } }
+.pl { padding: 12px 0; border-top: 1px solid var(--line); }
+.pl:first-child { border-top: 0; padding-top: 0; }
+.plh { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.plh small { color: var(--muted); font-weight: 400; }
+.bar { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; margin: 6px 0 4px; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+.pli { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; font-size: 14px; }
+.pli small { display: block; color: var(--muted); font-size: 12px; }
+.pli > span:last-child { font-weight: 600; white-space: nowrap; }
+.cmp { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.cmp th, .cmp td { padding: 10px 8px; border-top: 1px solid var(--line); text-align: center; vertical-align: middle; }
+.cmp tr:first-child th { border-top: 0; }
+.cmp td.k { color: var(--muted); font-size: 12px; font-weight: 600; width: 28%; }
+.cmp td.win { font-weight: 700; color: var(--accent); }
+.cmp th a { display: grid; justify-items: center; gap: 6px; color: var(--text); }
+.cmp th .avatar { width: 64px; height: 64px; font-size: 22px; }
+.vsin { width: 100%; padding: 8px 12px; border: 1px solid var(--muted); border-radius: 6px; font: inherit; background: var(--surface); color: var(--text); }
+.form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.form label { display: grid; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.form label.wide { grid-column: 1 / -1; }
+.form input, .form select { width: 100%; padding: 8px 12px; border: 1px solid var(--muted); border-radius: 6px; font: inherit; font-size: 14px; background: var(--surface); color: var(--text); }
+.form input:focus, .form select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+@media (max-width: 520px) { .form { grid-template-columns: minmax(0, 1fr); } }
+.readas { margin: 0 0 12px; padding: 8px 12px 8px 28px; background: var(--bg); border-radius: 6px; font-size: 12px; color: var(--muted); }
+.readas li { padding: 1px 0; }
+.youcr { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.youcr b.n { font-size: 44px; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.bd { width: 100%; border-collapse: collapse; }
+.bd td { padding: 10px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.bd tr:first-child td { border-top: 0; }
+.bd td.v { text-align: right; white-space: nowrap; padding-left: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.bd small { color: var(--muted); display: block; font-size: 12px; }
+.bd tr.total td { font-weight: 600; font-size: 16px; border-top: 2px solid var(--text); }
+.xp.big { gap: 16px; }
+.xp.big .lg { width: 48px; height: 48px; font-size: 15px; }
+.xp.big b { font-size: 16px; }
+.xp.big span { font-size: 14px; }
+.spark { width: 100%; height: 90px; display: block; }
+.near { list-style: none; margin: 0; padding: 0 0 8px; }
+.near a { display: grid; grid-template-columns: 26px auto minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 8px 16px; color: var(--text); font-weight: 400; }
+.near a:hover { background: var(--hover); text-decoration: none; }
+.near .avatar { width: 40px; height: 40px; font-size: 14px; }
+.near b { display: block; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.near small { display: block; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.near .me { background: var(--accent-soft); }
+
+/* Scoring */
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 760px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.formula { font: 13px/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace; background: var(--bg); border-radius: 8px; padding: 12px; overflow-x: auto; white-space: pre; margin: 0; }
+.trow { display: grid; grid-template-columns: 44px 44px minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 8px 0; border-top: 1px solid var(--line); }
+.trow:first-of-type { border-top: 0; }
+.trow.r2 { grid-template-columns: minmax(0, 1fr) 44px; }
+.trow .n { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .pick { transition: none; } }
+</style>
+
+<nav class="top gut" aria-label="Main">
+  <div class="inner">
+    <a class="logo" href="#rankings" aria-label="Cracked rankings home">C</a>
+    <label class="search"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M14.56 12.44 11.3 9.18a5.51 5.51 0 1 0-2.12 2.12l3.26 3.26a1.5 1.5 0 1 0 2.12-2.12ZM3 6.5A3.5 3.5 0 1 1 6.5 10 3.5 3.5 0 0 1 3 6.5Z"/></svg>
+      <input id="q" type="search" placeholder="Search people, companies, roles" aria-label="Search people, companies and roles" autocomplete="off"></label>
+    <div class="tabs">
+      <a href="#rankings" data-tab="rankings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21v-9h5v9H3Zm6.5 0V3h5v18h-5Zm6.5 0v-6h5v6h-5Z"/></svg><span>Rankings</span></a>
+      <a href="#vote" data-tab="vote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2 4 14h6.5l-1 8L19 10h-6.5l1-8Z"/></svg><span>Vote</span></a>
+      <a href="#companies" data-tab="companies"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V8l7-4v4l7-4v17h-5v-5h-4v5H3Zm15-2V6.2l-5 2.9V19h5Z"/></svg><span>Companies</span></a>
+      <a href="#schools" data-tab="schools"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 1 9l11 6 9-4.9V17h2V9L12 3Zm-7 9.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-4.8l-7 3.8-7-3.8Z"/></svg><span>Schools</span></a>
+      <a href="#me" data-tab="me"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.2-8 5v3h16v-3c0-2.8-3.6-5-8-5Z"/></svg><span>Rate me</span></a>
+      <a href="#method" data-tab="method"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg><span>Scoring</span></a>
+    </div>
+  </div>
+</nav>
+
+<main class="gut"><div class="inner" id="app">
+  <div class="card pad muted">Loading the rankings…</div>
+</div></main>
+
+<script>
+(function () {
+  "use strict";
+  /*SCORE:START*/
+const SCORE = (function () { const module = { exports: {} };
+// Cracked Rating (CR) algorithm, 1.0 to 16.0. Five parts, in order of weight:
+//   current job (company tier x role level, max 11) > track record (max 2) > education, pace for age, recognition (max 1 each).
+
+const TIERS = {
+  "S+": { pts: 10.0 }, S: { pts: 8.8 }, A: { pts: 7.4 }, B: { pts: 6.0 }, C: { pts: 4.6 }, D: { pts: 3.2 },
+  Z: { pts: 1.8 }, // anything we don't recognize
+};
+
+// Edit freely. Keys are matched against a normalized company name (lowercase, no punctuation / Inc / LLC).
+const COMPANIES = {
+  "S+": ["anthropic", "openai", "google deepmind", "deepmind", "nvidia", "spacex", "apple", "the white house", "united states government"],
+  S: ["google", "alphabet", "google brain", "google research", "youtube", "microsoft", "meta", "meta ai", "facebook", "instagram", "whatsapp",
+      "amazon", "aws", "tesla", "stripe", "jane street",
+      "citadel", "citadel securities", "hudson river trading", "renaissance technologies", "safe superintelligence", "ssi",
+      "thinking machines lab", "xai", "netflix", "y combinator", "mit", "massachusetts institute of technology", "stanford university",
+      "harvard university", "princeton university", "caltech", "california institute of technology", "uc berkeley",
+      "university of california berkeley", "sequoia capital", "amd", "advanced micro devices"],
+  A: ["anduril", "anduril industries", "palantir", "palantir technologies", "databricks", "scale ai", "perplexity", "perplexity ai", "mistral ai",
+      "anysphere", "cursor", "figma", "vercel", "airbnb", "uber", "shopify", "coinbase", "spotify", "snap", "snapchat", "linkedin", "two sigma",
+      "d e shaw", "de shaw", "goldman sachs", "morgan stanley", "mckinsey", "mckinsey company",
+      "bain company", "boston consulting group", "bcg", "blackstone", "andreessen horowitz", "a16z", "benchmark", "character ai", "characterai",
+      "hugging face", "world labs", "modular", "ethereum foundation", "blue origin", "carnegie mellon university", "university of oxford",
+      "university of cambridge", "university of toronto", "ucla", "university of california los angeles", "new york university", "nyu",
+      "waymo", "bytedance", "tiktok", "tsmc", "isomorphic labs", "ramp", "oculus", "oculus vr", "github", "cognition", "cognition ai", "cohere",
+      "yale university", "columbia university", "cornell university", "university of pennsylvania", "university of waterloo", "eth zurich"],
+  B: ["intel", "oracle", "salesforce", "adobe", "qualcomm", "ibm", "cisco", "samsung", "jpmorgan chase", "jpmorgan", "bloomberg", "dropbox",
+      "pinterest", "reddit", "lyft", "doordash", "robinhood", "discord", "notion", "brex", "rippling", "plaid", "atlassian", "twitter", "x",
+      "linux foundation", "id software", "freescale", "freescale semiconductor", "lsi logic", "auctomatic", "viaweb", "loopt", "zip2", "x com", "scale"],
+  C: ["accenture", "deloitte", "pwc", "ey", "ernst young", "kpmg", "walmart", "target", "dell", "hp", "capital one", "wells fargo", "verizon",
+      "att", "at t", "comcast", "boeing", "lockheed martin", "general electric", "keen technologies", "comma ai", "tiny", "eureka labs", "ami labs"],
+  D: ["infosys", "tata consultancy services", "tcs", "wipro", "cognizant", "self employed", "freelance", "independent"],
+};
+
+const COMPANY_INDEX = {};
+for (const [tier, names] of Object.entries(COMPANIES)) for (const n of names) COMPANY_INDEX[n] = tier;
+// Longer names first, so "google deepmind research" matches "google deepmind" before "google".
+const PREFIX_KEYS = Object.keys(COMPANY_INDEX).filter((k) => k.length >= 5).sort((a, b) => b.length - a.length);
+
+function normCompany(name) {
+  return String(name || "").toLowerCase().replace(/&/g, " ").replace(/[.,()'’"!·|/-]/g, " ")
+    .replace(/\b(inc|llc|ltd|corp|corporation|co|plc|gmbh)\b/g, "")
+    .replace(/\s+/g, " ").trim();
+}
+function companyTier(name) {
+  const n = normCompany(name);
+  if (!n) return "Z";
+  if (COMPANY_INDEX[n]) return COMPANY_INDEX[n];
+  const noThe = n.replace(/^the /, "");
+  if (COMPANY_INDEX[noThe]) return COMPANY_INDEX[noThe];
+  // "Amazon Web Services", "Google Cloud", "Microsoft Research": a known name followed by more words.
+  for (const k of PREFIX_KEYS) if (noThe.startsWith(k + " ")) return COMPANY_INDEX[k];
+  const st = /university|institute|college|school|polytechnique/.test(noThe) ? schoolTier(name) : null;
+  if (st) return st === "elite" ? "A" : st === "strong" ? "B" : "C";
+  return "Z";
+}
+
+// A real founder title: "Founder", "Co-founder & CEO", "CTO and Co-founder". Not "Co-founder, Forward Deployed Engineering team"
+// style titles where someone started a team inside a company: founder must end the title or be followed by &, "and", "at" etc.
+const FOUNDER_RE = /^\s*(co-?)?founder\b(?!\s+(of|for)\b)|\b(co-?)?founder\s*($|[&,\/|;+)(-]|and\b|at\b)/i;
+
+// Ordered: first match wins. pts are 0-10.
+const ROLES = [
+  [/president of the united states/i, 10, "Head of state"],
+  [/\b(assistant|advisor|adviser|secretary) to\b|\bexecutive assistant\b/i, 2.5, "Junior / Associate"],
+  [/\badvisory (board|council|committee)\b/i, 3, "Advisor / Board member"],
+  [/\bintern(ship)?\b/i, 1, "Intern"],
+  [/\bpost-?doc|\bphd (student|candidate)\b|\bdoctoral\b|\bresearch fellow\b/i, 3, "PhD / Postdoc"],
+  [/\bstudent\b/i, 1.5, "Student"],
+  [/\b(ceo|chief executive)\b/i, 9.5, "CEO"],
+  [/\baccount (director|executive|manager)\b|\bsales (director|manager)\b/i, 4.5, "Senior"],
+  [FOUNDER_RE, 9, "Founder"],
+  [/(?<!product )\bowner\b/i, 9, "Founder"],
+  [/\b(evp|svp|executive vice[- ]president|senior vice[- ]president)\b/i, 8, "SVP / EVP"],
+  [/\bvice[- ]president\b|\bvp\b/i, 7, "VP"],
+  [/\bpresident\b/i, 9, "President"],
+  [/\bchair(man|woman|person)?\b/i, 9, "Chair"],
+  [/\bchief of staff\b/i, 6, "Director / Head"],
+  [/\b(c[tof]o|chief (technology|technical|operating|financial|product|scientific|science|research|ai|business|revenue|strategy)\w* officer|chief scientist|chief technologist)\b/i, 8.5, "C-suite"],
+  [/\bchief [\w ,&-]*officer\b|\bc[mp]o\b|\bciso\b|\bchro\b/i, 7.8, "C-suite (functional)"],
+  [/\bchief\b/i, 6.5, "Chief architect / engineer"],
+  [/\b(general|managing) partner\b/i, 8, "General / Managing partner"],
+  [/\bmanaging director\b/i, 7, "Managing director"],
+  [/\bpartner\b/i, 7, "Partner"],
+  [/\bdistinguished\b|\bfellow\b/i, 7, "Fellow / Distinguished"],
+  [/\bassistant professor\b/i, 5.5, "Assistant professor"],
+  [/\bassociate professor\b/i, 6.5, "Associate professor"],
+  [/\bprofessor\b/i, 7, "Professor"],
+  [/\bsenior director\b/i, 6.5, "Senior director"],
+  [/\bdirector\b|\bhead of\b/i, 6, "Director / Head"],
+  [/\bprincipal\b/i, 6, "Principal"],
+  [/\bmember of (the )?technical staff\b/i, 4.5, "Senior"],
+  [/\bstaff\b/i, 5.5, "Staff"],
+  [/\b(lead|manager)\b/i, 5, "Lead / Manager"],
+  [/\b(board member|advisor|adviser|investor|mentor|volunteer)\b/i, 3, "Advisor / Board member"],
+  [/\b(senior|sr)\b/i, 4.5, "Senior"],
+  [/\b(junior|jr|associate|analyst|assistant|trainee|apprentice)\b/i, 2.5, "Junior / Associate"],
+  [/\b(janitor|custodian|cashier|barista|waiter|waitress|dishwasher|courier|clerk|receptionist|security guard|warehouse|stocker|cleaner|housekeeper|bartender|line cook|fry cook|laborer|labourer|crew member|(delivery|truck|taxi|bus|rideshare|uber|lyft) driver)\b/i, 2, "Entry level"],
+  [/\b(unemployed|not working|between jobs|no job|none|n\/a)\b/i, 1, "Not working"],
+];
+const DEFAULT_ROLE = { pts: 3.5, label: "Individual contributor" };
+function roleLevel(title) {
+  const t = String(title || "");
+  for (const [re, pts, label] of ROLES) if (re.test(t)) return { pts, label };
+  return DEFAULT_ROLE;
+}
+
+// Firms where "Partner" is the top of the ladder. Elsewhere it usually means a partnerships or sales role.
+const PARTNERSHIP = /capital|ventures|partners|combinator|horowitz|a16z|benchmark|sequoia|greylock|accel|kleiner|lightspeed|catalyst|founders fund|mckinsey|bain|consulting|bcg|goldman|morgan|blackstone|llp|\blaw\b|kpmg|deloitte|pwc|\bey\b|ernst|accenture|\bfund\b|equity|investments?/i;
+// A regional or country remit is a smaller job than the same title company-wide.
+const REGIONAL = /\b(emea|apac|apj|latam|dach|anz|mena|nordics|benelux|sea|india|uk|ireland|france|germany|italy|spain|japan|korea|china|canada|australia|brazil|mexico|singapore|europe|asia|americas|africa|middle east|regional|country (manager|lead|head|director))\b/i;
+
+function positionScore(p) {
+  const tier = companyTier(p.company);
+  let role = roleLevel(p.title);
+  if (role.label === "Partner" && !PARTNERSHIP.test(p.company || "")) role = { pts: 4.5, label: "Senior" };
+  let rolePts = role.pts, scope = null;
+  if (rolePts >= 6 && rolePts <= 8.5 && REGIONAL.test(p.title || "")) { rolePts -= 0.7; scope = "regional"; }
+  const c = TIERS[tier].pts / 10, r = rolePts / 10;
+  const s = 1 + 10 * Math.pow(c, 0.6) * Math.pow(r, 0.85); // 1 at the very bottom, 11 at the very top
+  return { score: s, tier, roleLabel: role.label, rolePts, companyPts: TIERS[tier].pts, scope };
+}
+
+// ---------- schools ----------
+// Matched against the normalized school name: an exact match, or the name starting with / containing the key.
+const SCHOOLS = {
+  elite: ["massachusetts institute of technology", "mit", "stanford", "harvard", "princeton", "california institute of technology", "caltech",
+    "university of california berkeley", "uc berkeley", "carnegie mellon", "university of oxford", "university of cambridge", "eth zurich",
+    "tsinghua", "peking university", "indian institute of technology", "university of waterloo"],
+  strong: ["university of washington", "university of illinois urbana", "university of illinois at urbana", "georgia institute of technology", "georgia tech",
+    "university of michigan", "cornell", "columbia university", "yale", "university of pennsylvania", "wharton", "university of california los angeles", "ucla",
+    "university of texas at austin", "university of toronto", "university of chicago", "duke university", "northwestern university", "brown university",
+    "dartmouth", "new york university", "nyu", "johns hopkins", "university of california san diego", "uc san diego", "university of wisconsin madison",
+    "imperial college", "university college london", "ucl", "epfl", "national university of singapore", "insead", "london business school",
+    "london school of economics", "ecole polytechnique", "technion", "kaist", "seoul national university", "university of tokyo",
+    "birla institute of technology", "mcgill", "university of british columbia", "purdue", "university of southern california", "rice university",
+    "harvey mudd", "university of maryland", "paul g allen school", "ecole normale superieure", "university of edinburgh"],
+};
+const SCHOOL_PTS = { elite: 0.7, strong: 0.5, other: 0.2 };
+const NOT_A_DEGREE = /continuing|executive education|extension|online|certificate|bootcamp|high school|secondary school|summer/i;
+function schoolTier(name) {
+  const n = normCompany(name).normalize("NFKD").replace(/[^a-z0-9 ]/g, "");
+  if (!n || NOT_A_DEGREE.test(name)) return null;
+  for (const t of ["elite", "strong"]) for (const k of SCHOOLS[t]) if (n === k || n.startsWith(k + " ") || (k.length >= 8 && n.includes(k))) return t;
+  return "other";
+}
+// One key per school, so "Stanford University" and "Stanford Graduate School of Business" share a leaderboard.
+function schoolKey(name) {
+  const n = normCompany(name).normalize("NFKD").replace(/[^a-z0-9 ]/g, "");
+  if (!n || NOT_A_DEGREE.test(name)) return "";
+  for (const t of ["elite", "strong"]) for (const k of SCHOOLS[t]) if (n === k || n.startsWith(k + " ") || (k.length >= 8 && n.includes(k))) return SCHOOL_ALIAS[k] || k;
+  return n.replace(/^the /, "");
+}
+const SCHOOL_ALIAS = { "paul g allen school": "university of washington", mit: "massachusetts institute of technology", caltech: "california institute of technology", "uc berkeley": "university of california berkeley",
+  "georgia tech": "georgia institute of technology", ucla: "university of california los angeles", nyu: "new york university", wharton: "university of pennsylvania",
+  "uc san diego": "university of california san diego", ucl: "university college london", "university of illinois at urbana": "university of illinois urbana" };
+function degreeBonus(degree) {
+  const d = String(degree || "");
+  if (/\b(ph\.?\s?d|doctor of philosophy|doctorate|d\.?phil)\b/i.test(d)) return { pts: 0.3, label: "Doctorate" };
+  if (/\b(master|m\.?s\.?c?|m\.?eng|mba|m\.?b\.?a|m\.?phil|j\.?d|m\.?d)\b/i.test(d)) return { pts: 0.15, label: "Graduate degree" };
+  return null;
+}
+
+const AWARDS = [
+  [/nobel/i, 1.0, "Nobel Prize"],
+  [/fields medal/i, 1.0, "Fields Medal"],
+  [/turing award/i, 1.0, "Turing Award"],
+  [/\bimo\b.*gold|international mathematical olympiad.*gold|gold.*\bimo\b/i, 0.4, "IMO gold"],
+  [/\bioi\b.*gold|international olympiad in informatics.*gold|gold.*\bioi\b/i, 0.4, "IOI gold"],
+  [/icpc.*(world champion|world finals.*(1st|first|gold))/i, 0.4, "ICPC world champion"],
+  [/thiel fellow/i, 0.25, "Thiel Fellow"],
+  [/30 under 30/i, 0.25, "Forbes 30 Under 30"],
+  [/young scientist/i, 0.25, "Young Scientist award"],
+];
+
+// The five parts of a rating and the most each can add. They sum to 16, and the job is worth more than the rest combined.
+const PILLARS = [
+  { key: "job", name: "Current job", max: 11 },
+  { key: "track", name: "Track record", max: 2 },
+  { key: "education", name: "Education", max: 1 },
+  { key: "pace", name: "Pace for age", max: 1 },
+  { key: "recognition", name: "Recognition", max: 1 },
+];
+const round = (x) => Math.round(x * 100) / 100;
+const year = (s) => { const m = /\d{4}/.exec(String(s || "")); return m ? Number(m[0]) : null; };
+
+// Age, when the profile doesn't state it: 22 at the end of a first degree, else 22 at the first job (20 if that job was an internship).
+function estimateAge(profile, scored, NOW) {
+  if (profile.born) return { age: NOW - Number(profile.born), basis: "birth year" };
+  const ends = (profile.education || []).filter((e) => schoolTier(e.school)).map((e) => year(e.end)).filter(Boolean);
+  if (ends.length) return { age: 22 + NOW - Math.min(...ends), basis: "graduation year" };
+  const dated = scored.filter((p) => year(p.start)).sort((a, b) => year(a.start) - year(b.start));
+  if (dated.length) return { age: (dated[0].rolePts <= 1.5 ? 20 : 22) + NOW - year(dated[0].start), basis: "first job on the profile" };
+  return null;
+}
+// The level a typical career reaches by a given age: individual contributor at 22, rising to the top of the scale by 50.
+const expectedLevel = (age) => Math.max(2.5, Math.min(9, 2.5 + (age - 22) * 0.23));
+
+function scoreProfile(profile) {
+  const NOW = new Date().getFullYear();
+  const positions = (profile.positions || []).filter((p) => p.title || p.company);
+  const scored = positions.map((p) => ({ ...p, ...positionScore(p) }));
+  const current = scored.filter((p) => p.current);
+  const past = scored.filter((p) => !p.current);
+  const best = (arr) => arr.reduce((a, b) => (!a || b.score > a.score ? b : a), null);
+  const top = best(current) || best(past);
+  const peakPast = best(past);
+  const employed = current.length > 0;
+
+  // 1. Current job. With no current job, the best past one counts for 70%.
+  const job = top ? top.score * (employed ? 1 : 0.7) : 0;
+
+  // 2. Track record.
+  const track = [];
+  const peakBonus = peakPast && employed ? Math.min(1, 0.25 * Math.max(0, peakPast.score - job)) : 0;
+  if (peakBonus > 0.004) track.push({ label: "Career peak", sub: `25% of the gap up to ${peakPast.title}, ${peakPast.company}`, pts: round(peakBonus) });
+
+  let founder = 0, founderAt = null;
+  const founded = new Set();
+  for (const p of scored) {
+    if (!FOUNDER_RE.test(p.title || "")) continue;
+    founded.add(normCompany(p.company));
+    const b = p.tier === "S+" ? 0.5 : p.tier === "S" ? 0.4 : p.tier === "A" ? 0.3 : 0.1;
+    if (b > founder) { founder = b; founderAt = p.company; }
+  }
+  if (founder) track.push({ label: "Founder", sub: founderAt, pts: founder });
+  const serial = founded.size >= 4 ? 0.7 : founded.size === 3 ? 0.5 : founded.size === 2 ? 0.3 : 0;
+  if (serial) track.push({ label: "Serial founder", sub: `Started ${founded.size} companies`, pts: serial });
+
+  const topKey = top ? normCompany(top.company) : "";
+  const elite = [...new Set(scored.filter((p) => (p.tier === "S+" || p.tier === "S") && normCompany(p.company) !== topKey).map((p) => normCompany(p.company)))];
+  const pedigree = Math.min(0.45, elite.length * 0.15);
+  if (pedigree) track.push({ label: "Top companies", sub: `${elite.length} other top-tier compan${elite.length === 1 ? "y" : "ies"} on the resume`, pts: round(pedigree) });
+
+  const dualRole = top ? current.find((p) => p !== top && normCompany(p.company) !== topKey && p.score >= 7) : null;
+  if (dualRole) track.push({ label: "Second current role", sub: `${dualRole.title}, ${dualRole.company}`, pts: 0.3 });
+
+  const topStart = top && top.current ? year(top.start) : null;
+  const tenureYears = topStart ? Math.max(0, NOW - topStart) : 0;
+  const tenure = Math.min(0.3, round(tenureYears * 0.03));
+  if (tenure) track.push({ label: "Tenure", sub: `${tenureYears} years in the current role`, pts: tenure });
+
+  const dated = scored.filter((p) => year(p.start)).sort((a, b) => year(a.start) - year(b.start));
+  const first = dated[0];
+  const climb = top && first && first !== top && year(first.start) < (topStart || NOW) && top.rolePts - first.rolePts >= 3 ? 0.2 : 0;
+  if (climb) track.push({ label: "Climbed the ladder", sub: `Started as ${first.title}`, pts: climb });
+
+  const seats = [...new Set(current.filter((p) => p !== top && p.roleLabel === "Advisor / Board member" && ["S+", "S", "A"].includes(p.tier)).map((p) => normCompany(p.company)))];
+  const boards = Math.min(0.3, round(seats.length * 0.1));
+  if (boards) track.push({ label: "Board seats", sub: `${seats.length} at top-tier companies`, pts: boards });
+
+  // 3. Education: the best school, plus the highest degree.
+  const edu = [];
+  let bestSchool = null, bestDegree = null;
+  for (const e of profile.education || []) {
+    const t = schoolTier(e.school);
+    if (!t) continue;
+    if (!bestSchool || SCHOOL_PTS[t] > SCHOOL_PTS[bestSchool.tier]) bestSchool = { name: e.school, tier: t };
+    const d = degreeBonus(e.degree);
+    if (d && (!bestDegree || d.pts > bestDegree.pts)) bestDegree = { ...d, school: e.school };
+  }
+  if (bestSchool) edu.push({ label: bestSchool.tier === "elite" ? "Elite school" : bestSchool.tier === "strong" ? "Strong school" : "Degree", sub: bestSchool.name, pts: SCHOOL_PTS[bestSchool.tier] });
+  if (bestDegree) edu.push({ label: bestDegree.label, sub: bestDegree.school, pts: bestDegree.pts });
+
+  // 4. Pace for age: how far ahead of a typical career they are, scaled by how good the company is.
+  const paceItems = [];
+  const est = top ? estimateAge(profile, scored, NOW) : null;
+  let paceInfo = null;
+  if (est && est.age >= 16 && est.age <= 95 && employed) {
+    const expected = expectedLevel(est.age);
+    const bonus = round(Math.max(0, Math.min(1, (top.rolePts - expected) / 4)) * (top.companyPts / 10));
+    paceInfo = { age: est.age, basis: est.basis, expected: round(expected), bonus };
+    if (bonus) paceItems.push({ label: `${top.roleLabel} at about ${est.age}`, sub: `Typical level at that age is ${expected.toFixed(1)}/10; theirs is ${top.rolePts}/10. Age from ${est.basis}`, pts: bonus });
+  }
+
+  // 5. Recognition: awards and audience.
+  const rec = [];
+  const awardsHit = [];
+  for (const a of profile.awards || []) for (const [re, pts, label] of AWARDS) {
+    if (re.test(a) && !awardsHit.some((x) => x.label === label)) { awardsHit.push({ label, pts }); rec.push({ label: "Award", sub: label, pts }); }
+  }
+  const f = Number(profile.followers) || 0;
+  const followers = f > 1000 ? round(Math.min(0.5, 0.125 * Math.log10(f / 1000))) : 0;
+  if (followers) rec.push({ label: "Followers", sub: f.toLocaleString("en-US"), pts: followers });
+
+  const sum = (a) => a.reduce((x, y) => x + y.pts, 0);
+  const jobItems = top ? [{ label: employed ? "Current role" : "Last role (no current job, counts 70%)", sub: `${top.title}, ${top.company}`, pts: round(job) }] : [];
+  const parts = { job: jobItems, track, education: edu, pace: paceItems, recognition: rec };
+  const pillars = PILLARS.map((p) => {
+    const raw = sum(parts[p.key]);
+    const pts = Math.min(p.max, raw);
+    return { key: p.key, name: p.name, max: p.max, pts: round(pts), items: parts[p.key], capped: round(pts - raw) };
+  });
+  const total = pillars.reduce((a, p) => a + p.pts, 0);
+  const final = Math.max(1, Math.min(16, total));
+  return {
+    cr: round(final),
+    breakdown: {
+      current: top ? { title: top.title, company: top.company, tier: top.tier, role: top.roleLabel, rolePts: top.rolePts, companyPts: top.companyPts, score: round(job) } : null,
+      pillars,
+      serial: serial ? { count: founded.size, bonus: serial } : null,
+      tenure: tenure ? { years: tenureYears, bonus: tenure } : null,
+      climb: climb ? { from: first.title, bonus: climb } : null,
+      dual: dualRole ? { title: dualRole.title, company: dualRole.company, bonus: 0.3 } : null,
+      boards: boards ? { count: seats.length, bonus: boards } : null,
+      foundedCount: founded.size,
+      school: bestSchool,
+      pace: paceInfo,
+      awards: awardsHit,
+    },
+    positions: scored.map((p) => ({ title: p.title, company: p.company, current: !!p.current, start: p.start || null, end: p.end || null, tier: p.tier, role: p.roleLabel, score: round(p.score) })),
+  };
+}
+
+const seen = new Set();
+const ROLES_TABLE = [...ROLES, [null, DEFAULT_ROLE.pts, DEFAULT_ROLE.label]]
+  .map(([, pts, label]) => ({ label, pts }))
+  .filter((r) => !seen.has(r.label) && seen.add(r.label));
+
+module.exports = { FOUNDER_RE, PILLARS, SCHOOLS, SCHOOL_PTS, schoolTier, schoolKey, scoreProfile, positionScore, companyTier, roleLevel, normCompany, TIERS, COMPANIES, ROLES_TABLE };
+
+return module.exports; })();
+  /*SCORE:END*/
+  const $app = document.getElementById("app"), $q = document.getElementById("q");
+  const K = 0.04, CROWD_CAP = 0.4, MISMATCH = 2, MAX_MINE = 2000, PAGE = 50;
+  const TIER_ORDER = ["S+", "S", "A", "B", "C", "D", "Z"];
+  const catList = () => [{ name: "All", count: P.length }, ...(DATA.categories || [])];
+
+  let DATA = null, P = [], byId = {};
+  const others = new Map();
+  let myVotes = [], myId = null, myRef = null, mode = "loading";
+  let model = null;
+  const ME0 = { title: "", company: "", school: "", degree: "", age: "", founded: "0", followers: "" };
+  let meSaved = {}; try { meSaved = JSON.parse(localStorage.getItem("cracked-me") || "{}") || {}; } catch (e) {}
+  const ui = { me: { ...ME0, ...meSaved }, filter: "All", query: "", shown: PAGE, pair: null, keepPair: false, recent: [], busy: false, lastVote: 0 };
+
+  // ---------- helpers ----------
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmt = n => (Math.round(n * 100) / 100).toFixed(2);
+  const sgn = n => (n > 0.004 ? "+" : n < -0.004 ? "−" : "±") + fmt(Math.abs(n));
+  function hue(id) { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return h; }
+  const initials = n => n.split(/\s+/).map(x => x[0]).slice(0, 2).join("").toUpperCase();
+  const initialsAvatar = p => `<span class="avatar" aria-hidden="true" style="background:hsl(${hue(p.id)} 38% 46%)">${esc(initials(p.name))}</span>`;
+  const avatar = p => p.photo ? `<img class="avatar" src="${esc(p.photo)}" alt="" data-pid="${esc(p.id)}" style="background:hsl(${hue(p.id)} 38% 46%)">` : initialsAvatar(p);
+  const banner = p => `<div class="banner" style="background:linear-gradient(120deg,hsl(${hue(p.id)} 22% 72%),hsl(${(hue(p.id) + 30) % 360} 28% 84%) 55%,#e4eaf0)"></div>`;
+  const tcls = t => "t-" + (t === "S+" ? "Sp" : t);
+  const tier = t => `<span class="tier ${tcls(t)}" title="${esc(t)}-tier company">${esc(t)}</span>`;
+  const plink = id => `#p-${id}`;
+  const clink = key => `#c-${encodeURIComponent(key)}`;
+  const slink = key => `#s-${encodeURIComponent(key)}`;
+  const vslink = (a, b) => `#vs-${a}~${b}`;
+  const STIER = { elite: "S+", strong: "A", other: "C" };
+  const TICK = `<svg class="tick" viewBox="0 0 16 16" aria-label="Checked by hand"><title>Checked by hand</title><path d="M8 0 9.9 1.4 12.3 1.2 13 3.5 15 4.7 14.4 7 15 9.3 13 10.5 12.3 12.8 9.9 12.6 8 14 6.1 12.6 3.7 12.8 3 10.5 1 9.3 1.6 7 1 4.7 3 3.5 3.7 1.2 6.1 1.4 8 0ZM7 10.8l4.2-4.2-1.1-1.1L7 8.6 5.6 7.2 4.5 8.3 7 10.8Z"/></svg>`;
+  const vtick = p => p.verified ? TICK : "";
+  function ago(t) { const s = Math.max(1, Math.round((Date.now() - t) / 1000)); if (s < 60) return `${s}s ago`; const m = Math.round(s / 60); if (m < 60) return `${m}m ago`; const h = Math.round(m / 60); if (h < 48) return `${h}h ago`; return `${Math.round(h / 24)}d ago`; }
+  const rankChip = d => d > 0 ? `<span class="chip up">▲ ${d}</span>` : d < 0 ? `<span class="chip down">▼ ${-d}</span>` : `<span class="chip flat">–</span>`;
+  const crChip = d => Math.abs(d) < 0.005 ? `<span class="chip flat">±0.00</span>` : `<span class="chip ${d > 0 ? "up" : "down"}">${sgn(d)}</span>`;
+
+  // ---------- rating model ----------
+  // Final CR = algorithm score (from the profile, as of time t) + crowd offset (Elo-style replay of every vote up to t).
+  function algoAt(p, t) {
+    if (t >= Date.now() - 1000) return p.cr;
+    const day = new Date(t).toISOString().slice(0, 10);
+    let v = p.history && p.history.length ? p.history[0].s : p.cr;
+    for (const h of p.history || []) if (h.d <= day) v = h.s;
+    return v;
+  }
+  function allVotes() {
+    const out = [];
+    for (const [uid, vs] of others) if (uid !== myId) for (const v of vs) out.push(v);
+    for (const v of myVotes) out.push(v);
+    return out.filter(v => v && byId[v.w] && byId[v.l] && v.w !== v.l && typeof v.t === "number").sort((a, b) => a.t - b.t);
+  }
+  function snapshot(votes, t) {
+    const off = {}, w = {}, l = {}, base = {};
+    for (const p of P) { off[p.id] = 0; w[p.id] = 0; l[p.id] = 0; base[p.id] = algoAt(p, t); }
+    for (const v of votes) {
+      if (v.t > t) break;
+      const a = base[v.w] + off[v.w], b = base[v.l] + off[v.l];
+      const expected = 1 / (1 + Math.pow(10, (b - a) / 4));
+      // A clear favourite beating a long shot tells us nothing new, so it moves nothing (it still counts in the record).
+      const d = base[v.w] - base[v.l] >= MISMATCH ? 0 : K * (1 - expected);
+      off[v.w] = Math.min(CROWD_CAP, off[v.w] + d); off[v.l] = Math.max(-CROWD_CAP, off[v.l] - d);
+      w[v.w]++; l[v.l]++;
+    }
+    const cr = {}; for (const p of P) cr[p.id] = Math.max(1, Math.min(16, base[p.id] + off[p.id]));
+    const order = P.map(p => p.id).sort((x, y) => cr[y] - cr[x] || byId[x].name.localeCompare(byId[y].name));
+    const rank = {}; order.forEach((id, i) => (rank[id] = i + 1));
+    return { cr, off, base, w, l, order, rank };
+  }
+  function compute() {
+    const votes = allVotes(), now = Date.now();
+    const voters = new Set([...others.keys()].filter(k => (others.get(k) || []).length));
+    if (myVotes.length) voters.add(myId || "me");
+    // "start" is the board before any votes: movement is what the crowd has done to the algorithm's order.
+    model = { votes, now: snapshot(votes, now), start: snapshot([], now), voters: voters.size };
+  }
+  const rankDelta = id => model.start.rank[id] - model.now.rank[id];
+  const crDelta = id => model.now.cr[id] - model.start.cr[id];
+
+  // ---------- rankings ----------
+  function matches() {
+    const q = ui.query.trim().toLowerCase();
+    return model.now.order.filter(id => {
+      const p = byId[id];
+      if (ui.filter !== "All" && !p.tags.includes(ui.filter)) return false;
+      if (!q) return true;
+      return (p.name + " " + p.headline + " " + p.positions.map(x => x.company + " " + x.title).join(" ")).toLowerCase().includes(q);
+    });
+  }
+  function listRows() {
+    const ids = matches();
+    if (!ids.length) return `<p class="empty">Nobody matches ${ui.query ? "“" + esc(ui.query) + "”" : "that filter"}.</p>`;
+    return ids.slice(0, ui.shown).map(id => {
+      const p = byId[id], c = p.score.current, r = model.now.rank[id];
+      return `<a class="row${r <= 3 ? " top3" : ""}" href="${plink(id)}"><span class="rank">${r}</span>${avatar(p)}
+        <span class="info"><b>${esc(p.name)}${vtick(p)}</b><span>${esc(c ? c.title : p.headline)}</span>${c ? `<span class="co">${tier(c.tier)} ${esc(c.company)} · ${model.now.w[id]}–${model.now.l[id]} in votes</span>` : ""}</span>
+        <span class="score"><b>${fmt(model.now.cr[id])}</b>${rankChip(rankDelta(id))}</span></a>`;
+    }).join("") + (ids.length > ui.shown ? `<button class="more" type="button" id="more">Show more results (${ids.length - ui.shown} left)</button>` : "");
+  }
+  function viewRankings() {
+    const moves = P.map(p => ({ id: p.id, d: rankDelta(p.id), c: crDelta(p.id) }));
+    const up = moves.filter(m => m.d > 0 || m.c > 0.05).sort((a, b) => b.d - a.d || b.c - a.c).slice(0, 5);
+    const down = moves.filter(m => m.d < 0 || m.c < -0.05).sort((a, b) => a.d - b.d || a.c - b.c).slice(0, 5);
+    const news = m => { const p = byId[m.id]; return `<li><a href="${plink(m.id)}"><b>${esc(p.name)}</b>${rankChip(m.d)}<small>Now #${model.now.rank[m.id]} · ${sgn(m.c)} CR · ${esc(p.headline)}</small></a></li>`; };
+    const evs = (DATA.events || []).slice(-6).reverse().filter(e => byId[e.id]);
+    return `<div class="cols">
+      <aside class="stack">
+        <div class="card mini"><div class="strip"></div><div class="logo" aria-hidden="true">C</div>
+          <div class="t"><b>Cracked Rankings</b><span class="muted small">${P.length.toLocaleString()} people ranked</span></div>
+          <div style="padding:12px 0"><div class="kv"><span>Matchups decided</span><b>${model.votes.length.toLocaleString()}</b></div><div class="kv"><span>Voters</span><b>${model.voters}</b></div><div class="kv"><span>Your votes</span><b>${myVotes.length}</b></div></div>
+          <div class="pad" style="border-top:1px solid var(--line)"><a class="btn primary" style="width:100%" href="#vote">Start voting</a></div>
+        </div>
+        <div class="card"><div class="menu" role="group" aria-label="Category">${catList().map(c => `<button type="button" data-f="${esc(c.name)}" aria-pressed="${c.name === ui.filter}"><span>${c.name === "All" ? "Everyone" : esc(c.name)}</span><span class="c tnum">${c.count}</span></button>`).join("")}</div></div>
+      </aside>
+
+      <section class="card" aria-label="World rankings">
+        <div class="head"><h2>${ui.filter === "All" ? "World rankings" : esc(ui.filter) + " rankings"}</h2>
+          <span class="muted small">${model.votes.length.toLocaleString()} votes counted</span></div>
+        <p class="muted small" style="margin:0;padding:0 16px 12px">Rating out of 16. Arrows show places gained or lost from the crowd's votes.</p>
+        <div id="list">${listRows()}</div>
+      </section>
+
+      <aside class="rail">
+        <div class="card"><div class="head"><h2>Movers</h2><span class="muted small">Vs. the algorithm</span></div>
+          <div class="sect">Top risers</div>${up.length ? `<ul class="news">${up.map(news).join("")}</ul>` : `<p class="empty">Nobody has risen yet. <a href="#vote">Vote</a> to move the board.</p>`}
+          <div class="sect">Top drops</div>${down.length ? `<ul class="news">${down.map(news).join("")}</ul>` : `<p class="empty">Nobody has dropped yet.</p>`}
+        </div>
+        <div class="card"><div class="head"><h2>Career moves</h2></div>
+          ${evs.length ? `<ul class="moves">${evs.map(e => `<li><a href="${plink(e.id)}">${esc(byId[e.id].name)}</a><span>${esc(e.to.title)}, ${esc(e.to.company)} ${crChip(e.delta)}</span><span class="muted small">Was ${esc(e.from.title)}, ${esc(e.from.company)} · ${esc(e.d)}</span></li>`).join("")}</ul>`
+            : `<p class="empty">No job changes yet. Promotions, new jobs and exits found by the monthly profile update appear here.</p>`}
+        </div>
+        <p class="muted small" style="margin:4px 16px">${mode === "shared" ? "Votes are live and shared with everyone on this page." : mode === "local" ? "Votes are saved on this device only." : mode === "readonly" ? "You have view-only access, so you can't vote." : "Connecting to shared votes…"}</p>
+      </aside>
+    </div>`;
+  }
+
+  // ---------- companies ----------
+  function coLogo(c) { return `<span class="colg ${tcls(c.tier)}" aria-hidden="true">${esc(c.tier)}</span>`; }
+  function viewCompanies() {
+    const list = DATA.companies || [];
+    return `<div class="narrow stack">
+      <div class="card pad"><h1>Company rankings</h1><p class="muted" style="margin:4px 0 0">Companies with at least ${DATA.minGroup || 3} ranked people, ordered by the average rating of their five strongest. ${list.length} compan${list.length === 1 ? "y" : "ies"} qualify so far.</p></div>
+      ${list.length ? `<div class="card">${list.map((c, i) => `<a class="corow" href="${clink(c.key)}"><span class="rank">${i + 1}</span>${coLogo(c)}
+        <span style="min-width:0"><b>${esc(c.name)}</b><small>${c.count} ranked · strongest ${esc(byId[c.top] ? byId[c.top].name : "")}</small></span>
+        <span style="text-align:right"><b class="tnum">${fmt(c.avg)}</b><small class="muted" style="font-size:12px">top 5 avg</small></span></a>`).join("")}</div>`
+        : `<div class="card pad muted">No company has ${DATA.minGroup || 3} ranked people yet.</div>`}
+    </div>`;
+  }
+  function viewCompany(key) {
+    const c = (DATA.companies || []).find(x => x.key === key);
+    if (!c) return `<div class="card pad"><h1>Not found</h1><p class="muted">No company with that name is ranked. <a href="#companies">All companies</a></p></div>`;
+    const ids = model.now.order.filter(id => byId[id].coKey === key);
+    const rank = (DATA.companies || []).findIndex(x => x.key === key) + 1;
+    return `<div class="narrow stack">
+      <p class="muted small" style="margin:0"><a href="#companies">← Companies</a></p>
+      <div class="card pad"><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${coLogo(c)}
+        <div style="min-width:0;flex:1"><h1>${esc(c.name)}</h1><p class="muted" style="margin:2px 0 0">#${rank} of ${DATA.companies.length} companies · ${esc(c.tier)}-tier · ${ids.length} ranked people</p></div>
+        <div style="text-align:right"><b style="font-size:28px" class="tnum">${fmt(c.avg)}</b><div class="muted small">top 5 average</div></div></div></div>
+      <div class="card">${ids.map((id, i) => {
+        const p = byId[id];
+        return `<a class="row" href="${plink(id)}"><span class="rank">${i + 1}</span>${avatar(p)}
+          <span class="info"><b>${esc(p.name)}${vtick(p)}</b><span>${esc(p.score.current ? p.score.current.title : p.headline)}</span><span class="co">World #${model.now.rank[id]}</span></span>
+          <span class="score"><b>${fmt(model.now.cr[id])}</b>${rankChip(rankDelta(id))}</span></a>`;
+      }).join("")}</div>
+    </div>`;
+  }
+
+  // ---------- schools ----------
+  const inSchool = key => model.now.order.filter(id => (byId[id].education || []).some(e => e.key === key));
+  function viewSchools() {
+    const list = DATA.schools || [];
+    return `<div class="narrow stack">
+      <div class="card pad"><h1>School rankings</h1><p class="muted" style="margin:4px 0 0">Schools with at least ${DATA.minGroup || 3} ranked people, ordered by the average rating of their five strongest. ${list.length} school${list.length === 1 ? "" : "s"} qualify so far.</p></div>
+      ${list.length ? `<div class="card">${list.map((c, i) => `<a class="corow" href="${slink(c.key)}"><span class="rank">${i + 1}</span><span class="colg ${tcls(STIER[c.tier])}" aria-hidden="true">${c.tier === "elite" ? "E" : c.tier === "strong" ? "S" : "·"}</span>
+        <span style="min-width:0"><b>${esc(c.name)}</b><small>${c.count} ranked · strongest ${esc(byId[c.top] ? byId[c.top].name : "")}</small></span>
+        <span style="text-align:right"><b class="tnum">${fmt(c.avg)}</b><small class="muted" style="font-size:12px">top 5 avg</small></span></a>`).join("")}</div>`
+        : `<div class="card pad muted">No school has ${DATA.minGroup || 3} ranked people yet.</div>`}
+    </div>`;
+  }
+  function viewSchool(key) {
+    const c = (DATA.schools || []).find(x => x.key === key);
+    if (!c) return `<div class="card pad"><h1>Not found</h1><p class="muted">No school with that name is ranked. <a href="#schools">All schools</a></p></div>`;
+    const ids = inSchool(key), rank = DATA.schools.findIndex(x => x.key === key) + 1;
+    return `<div class="narrow stack">
+      <p class="muted small" style="margin:0"><a href="#schools">← Schools</a></p>
+      <div class="card pad"><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <div style="min-width:0;flex:1"><h1>${esc(c.name)}</h1><p class="muted" style="margin:2px 0 0">#${rank} of ${DATA.schools.length} schools · ${c.tier === "other" ? "standard" : esc(c.tier)} tier, worth +${DATA.schoolTiers[c.tier].pts} · ${ids.length} ranked people</p></div>
+        <div style="text-align:right"><b style="font-size:28px" class="tnum">${fmt(c.avg)}</b><div class="muted small">top 5 average</div></div></div></div>
+      <div class="card">${ids.map((id, i) => {
+        const p = byId[id];
+        return `<a class="row" href="${plink(id)}"><span class="rank">${i + 1}</span>${avatar(p)}
+          <span class="info"><b>${esc(p.name)}${vtick(p)}</b><span>${esc(p.headline)}</span><span class="co">World #${model.now.rank[id]}</span></span>
+          <span class="score"><b>${fmt(model.now.cr[id])}</b>${rankChip(rankDelta(id))}</span></a>`;
+      }).join("")}</div>
+    </div>`;
+  }
+
+  // ---------- compare ----------
+  function viewCompare(a, b) {
+    const A = byId[a], B = byId[b], n = model.now;
+    if (!A || !B) return `<div class="card pad"><h1>Not found</h1><p class="muted">One of those people isn't on the board. <a href="#rankings">Back to rankings</a></p></div>`;
+    const row = (k, x, y, fx, better) => { const w = better == null ? 0 : better; return `<tr><td class="${w > 0 ? "win" : ""}">${fx(x)}</td><td class="k">${k}</td><td class="${w < 0 ? "win" : ""}">${fx(y)}</td></tr>`; };
+    const num = (k, x, y, f) => row(k, x, y, f || fmt, x === y ? 0 : x > y ? 1 : -1);
+    const head = p => `<th><a href="${plink(p.id)}">${avatar(p)}<b>${esc(p.name)}${vtick(p)}</b><span class="muted small" style="font-weight:400">${esc(p.headline)}</span></a></th>`;
+    const h2h = model.votes.reduce((o, v) => { if (v.w === a && v.l === b) o[0]++; if (v.w === b && v.l === a) o[1]++; return o; }, [0, 0]);
+    const school = p => (p.score.school ? esc(p.score.school.name) : "–");
+    return `<div class="narrow stack">
+      <div class="card pad"><h1>Side by side</h1><p class="muted" style="margin:4px 0 8px">Where each rating comes from. The higher number in each row is highlighted.</p>
+        <label class="muted small" for="vsin">Compare ${esc(A.name.split(" ")[0])} with someone else</label>
+        <input class="vsin" id="vsin" list="vsnames" placeholder="Type a name" data-vs="${esc(a)}"><datalist id="vsnames">${n.order.slice(0, 400).map(id => `<option value="${esc(byId[id].name)}">`).join("")}</datalist></div>
+      <div class="card pad"><table class="cmp"><tbody>
+        <tr>${head(A)}<th class="muted" style="width:28%">VS</th>${head(B)}</tr>
+        ${num("Cracked Rating", n.cr[a], n.cr[b])}
+        ${row("World rank", n.rank[a], n.rank[b], x => "#" + x, n.rank[a] === n.rank[b] ? 0 : n.rank[a] < n.rank[b] ? 1 : -1)}
+        ${(DATA.pillars || []).map(pl => { const g = p => (p.score.pillars.find(x => x.key === pl.key) || { pts: 0 }).pts; return num(`${pl.name} (max ${pl.max})`, g(A), g(B)); }).join("")}
+        ${num("Crowd votes", n.off[a], n.off[b], sgn)}
+        ${row("Vote record", `${n.w[a]}–${n.l[a]}`, `${n.w[b]}–${n.l[b]}`, x => x)}
+        ${row("Head to head", h2h[0], h2h[1], x => x, h2h[0] === h2h[1] ? 0 : h2h[0] > h2h[1] ? 1 : -1)}
+        ${row("Best school", school(A), school(B), x => x)}
+        ${row("Age (estimated)", A.age || "–", B.age || "–", x => x)}
+      </tbody></table></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn primary" href="#vote" data-pair="${esc(a)}~${esc(b)}">Vote on this matchup</a><a class="btn" href="#method">How scoring works</a></div>
+    </div>`;
+  }
+
+  // ---------- rate yourself ----------
+  const DEG = { "": "", bachelor: "BS", master: "Master", phd: "PhD" };
+  function meProfile() {
+    const m = ui.me, y = new Date().getFullYear();
+    const positions = [{ title: m.title, company: m.company, current: true }];
+    for (let i = 0; i < Math.min(4, Number(m.founded) || 0); i++) positions.push({ title: "Founder", company: "Earlier startup " + (i + 1) });
+    const p = { positions };
+    if (m.school.trim()) p.education = [{ school: m.school, degree: DEG[m.degree] || "" }];
+    const age = Number(m.age); if (age >= 14 && age <= 100) p.born = y - Math.round(age);
+    const f = Number(String(m.followers).replace(/[, ]/g, "")); if (f > 0) p.followers = f;
+    return p;
+  }
+  // Sample titles up the ladder, used to show what a promotion would be worth.
+  const LADDER = ["Intern", "Analyst", "Software Engineer", "Senior Engineer", "Staff Engineer", "Director", "Vice President", "Senior Vice President", "Chief Technology Officer", "CEO"];
+  function meResult() {
+    const m = ui.me;
+    if (!m.title.trim() && !m.company.trim()) return `<p class="muted" style="margin:0">Enter your job title and company to see your rating.</p>`;
+    const base = meProfile(), r = SCORE.scoreProfile(base), b = r.breakdown, n = model.now;
+    const rank = 1 + n.order.filter(id => n.cr[id] > r.cr).length, total = P.length + 1;
+    const ahead = Math.round(((total - rank) / (total - 1)) * 100);
+    const above = n.order.slice(Math.max(0, rank - 3), rank - 1), below = n.order.slice(rank - 1, rank + 1);
+    const near = id => `<li><a href="${plink(id)}"><span class="muted tnum">${n.rank[id] + (n.cr[id] > r.cr ? 0 : 1)}</span>${avatar(byId[id])}<span style="min-width:0"><b>${esc(byId[id].name)}</b><small>${esc(byId[id].headline)}</small></span><b class="tnum">${fmt(n.cr[id])}</b></a></li>`;
+    const you = `<li><a class="me" href="#me"><span class="muted tnum">${rank}</span><span class="avatar" aria-hidden="true" style="background:var(--accent)">You</span><span style="min-width:0"><b>You</b><small>${esc([m.title, m.company].filter(x => x.trim()).join(", "))}</small></span><b class="tnum">${fmt(r.cr)}</b></a></li>`;
+    const school = m.school.trim() ? SCORE.schoolTier(m.school) : null;
+    const cur = b.current;
+
+    // How each input was read, so a surprising number can be traced to its cause.
+    const read = [];
+    read.push(m.title.trim() ? (cur.role === "Individual contributor" && !/engineer|developer|designer|scientist|specialist|consultant|programmer/i.test(m.title)
+      ? `Title not recognised, so it counts as a mid-level role (${cur.rolePts}/10)` : `Title read as ${esc(cur.role)} (${cur.rolePts}/10)`) : "No title entered");
+    read.push(m.company.trim() ? (cur.tier === "Z" ? `Company isn't on the tier list, so it counts as Z-tier (${cur.companyPts}/10)` : `Company is ${esc(cur.tier)}-tier (${cur.companyPts}/10)`) : "No company entered, which counts as Z-tier");
+    if (m.school.trim()) read.push(school === "elite" ? "Elite school" : school === "strong" ? "Strong school" : school ? "School not on the list, counts as standard" : "That doesn't count as a degree programme");
+    if (String(m.age).trim()) read.push(b.pace ? (b.pace.bonus ? `At ${b.pace.age} you're ahead of the typical level (${b.pace.expected}/10)` : `At ${b.pace.age} the typical level is ${b.pace.expected}/10 and yours is ${cur.rolePts}/10, so age adds nothing`) : "Age must be between 14 and 100");
+
+    // What would move the number: the same profile with one thing changed.
+    const alt = (label, change) => { const p2 = JSON.parse(JSON.stringify(base)); change(p2); const d = SCORE.scoreProfile(p2).cr - r.cr; return Math.abs(d) >= 0.05 ? { label, d } : null; };
+    const up = LADDER.find(t => SCORE.roleLevel(t).pts > cur.rolePts);
+    const y = new Date().getFullYear();
+    const ifs = [
+      up && alt(`Promoted to ${up}`, p2 => { p2.positions[0].title = up; }),
+      cur.tier !== "S+" && alt("Same job at OpenAI", p2 => { p2.positions[0].company = "OpenAI"; }),
+      school !== "elite" && alt("A degree from MIT", p2 => { p2.education = [{ school: "MIT", degree: (base.education && base.education[0] && base.education[0].degree) || "BS" }]; }),
+      m.degree !== "phd" && alt("A doctorate", p2 => { p2.education = [{ school: m.school.trim() || "State University", degree: "PhD" }]; }),
+      base.born && y - base.born > 22 && alt("The same job at 22", p2 => { p2.born = y - 22; }),
+      (Number(m.founded) || 0) < 2 && alt("Two startups founded", p2 => { p2.positions = [p2.positions[0], { title: "Founder", company: "Earlier startup 1" }, { title: "Founder", company: "Earlier startup 2" }]; }),
+    ].filter(Boolean).sort((a, c) => c.d - a.d);
+
+    return `<div class="youcr"><div><b class="n">${fmt(r.cr)}</b><div class="muted small">Cracked Rating, out of 16</div></div>
+        <div style="text-align:right"><b style="font-size:20px">#${rank.toLocaleString()} of ${total.toLocaleString()}</b><div class="muted small">Ahead of ${ahead}% of the board</div></div></div>
+      <ul class="readas">${read.map(x => `<li>${x}</li>`).join("")}</ul>
+      ${b.pillars.map(pl => `<div class="pl"><div class="plh"><b>${esc(pl.name)}</b><span class="tnum"><b>${fmt(pl.pts)}</b> <small>of ${pl.max}</small></span></div>
+        <div class="bar" role="img" aria-label="${fmt(pl.pts)} of ${pl.max}"><i style="width:${Math.max(0, Math.min(100, (pl.pts / pl.max) * 100)).toFixed(1)}%"></i></div>
+        ${pl.items.map(it => `<div class="pli"><span>${esc(it.label)}<small>${esc(it.sub.replace("theirs is", "yours is"))}</small></span><span class="tnum">${sgn(it.pts)}</span></div>`).join("")}</div>`).join("")}
+      ${ifs.length ? `<h2 style="margin:16px 0 4px">What would move it</h2>${ifs.map(x => `<div class="pli"><span>${esc(x.label)}</span><span class="tnum">${fmt(r.cr + x.d)} <span class="chip ${x.d > 0 ? "up" : "down"}">${sgn(x.d)}</span></span></div>`).join("")}` : ""}
+      <h2 style="margin:16px 0 4px">Where you'd land</h2><ul class="near" style="margin:0 -16px">${above.map(near).join("")}${you}${below.map(near).join("")}</ul>`;
+  }
+  function viewMe() {
+    const m = ui.me, f = (k, label, ph, extra) => `<label${extra && extra.wide ? ' class="wide"' : ""}>${label}<input data-me="${k}" value="${esc(m[k])}" placeholder="${esc(ph)}" ${extra && extra.attrs || ""} autocomplete="off"></label>`;
+    return `<div class="narrow stack">
+      <div class="card pad"><h1>Rate yourself</h1><p class="muted" style="margin:4px 0 0">The same scoring as the board, applied to you. Nothing you type leaves this device, and you aren't added to the rankings.</p></div>
+      <div class="two">
+        <div class="card pad"><div class="form">
+          ${f("title", "Job title", "Senior Software Engineer", { wide: true })}
+          ${f("company", "Company", "OpenAI", { wide: true })}
+          ${f("school", "School", "University of Washington", { wide: true })}
+          <label>Highest degree<select data-me="degree">${[["", "None or in progress"], ["bachelor", "Bachelor's"], ["master", "Master's, MBA, JD, MD"], ["phd", "Doctorate"]].map(([v, t]) => `<option value="${v}"${m.degree === v ? " selected" : ""}>${t}</option>`).join("")}</select></label>
+          ${f("age", "Age", "24", { attrs: 'inputmode="numeric"' })}
+          <label>Other companies you founded<select data-me="founded">${[0, 1, 2, 3, 4].map(v => `<option value="${v}"${String(m.founded) === String(v) ? " selected" : ""}>${v === 4 ? "4 or more" : v}</option>`).join("")}</select></label>
+          ${f("followers", "Followers (optional)", "12,000", { attrs: 'inputmode="numeric"' })}
+        </div><p class="muted small" style="margin:12px 0 0">Tip: put "Founder" or "Co-founder" in the title if you started the company. <a href="#method">How scoring works</a></p></div>
+        <div class="card pad" id="meout" aria-live="polite">${meResult()}</div>
+      </div>
+    </div>`;
+  }
+
+  // ---------- vote ----------
+  function xpList(p, n, big) {
+    const list = [...p.positions.filter(x => x.current), ...p.positions.filter(x => !x.current)].slice(0, n);
+    return `<ul class="xp${big ? " big" : ""}">${list.map(x => `<li class="${x.current ? "" : "past"}"><span class="lg ${tcls(x.tier)}" title="${esc(x.tier)}-tier company">${esc(x.tier)}</span>
+      <div><b>${esc(x.title)}</b><span>${esc(x.company)}${big && x.start ? ` · ${esc(x.start)} – ${x.current ? "Present" : esc(x.end || "")}` : x.current ? "" : " · past"}</span>${big ? `<span>${esc(x.role)} level</span>` : ""}</div>
+      ${big ? `<span class="tnum muted" title="Score for this role alone">${fmt(x.score)}</span>` : ""}</li>`).join("")}</ul>`;
+  }
+  function pickHTML(id, side) {
+    const p = byId[id];
+    return `<button class="pick" type="button" data-id="${id}" data-side="${side}" aria-label="${esc(p.name)} is more cracked">
+      ${banner(p)}
+      <div class="id">${avatar(p)}<b>${esc(p.name)}${vtick(p)}</b><span>${esc(p.headline)}</span></div>
+      <div>${xpList(p, 3)}${p.awards.length ? `<p class="muted small" style="margin:10px 0 0">Honors: ${p.awards.slice(0, 2).map(esc).join(" · ")}</p>` : ""}</div>
+      <div class="foot"><span><b>${fmt(model.now.cr[id])}</b> rating</span><span>World #${model.now.rank[id]} · ${model.now.w[id]}–${model.now.l[id]}</span></div>
+      <span class="btn primary">More cracked</span>
+    </button>`;
+  }
+  function pickPair() {
+    const cur = model.now, pool = P.map(p => p.id);
+    const weights = pool.map(id => 1 / (1 + cur.w[id] + cur.l[id]));
+    let x = Math.random() * weights.reduce((a, b) => a + b, 0), a = pool[0];
+    for (let i = 0; i < pool.length; i++) { x -= weights[i]; if (x <= 0) { a = pool[i]; break; } }
+    const near = pool.filter(id => id !== a).sort((p, q) => Math.abs(cur.cr[p] - cur.cr[a]) - Math.abs(cur.cr[q] - cur.cr[a]));
+    const cands = (Math.random() < 0.75 ? near.slice(0, 8) : near.slice(0, 40)).filter(b => !ui.recent.includes([a, b].sort().join("|")));
+    const list = cands.length ? cands : near;
+    const b = list[Math.floor(Math.random() * list.length)];
+    ui.recent.push([a, b].sort().join("|")); if (ui.recent.length > 12) ui.recent.shift();
+    return Math.random() < 0.5 ? [a, b] : [b, a];
+  }
+  function viewVote() {
+    if (!ui.pair) ui.pair = pickPair();
+    const last = model.votes.slice(-8).reverse();
+    return `<div class="narrow stack">
+      <div class="card pad"><h1>Who's more cracked?</h1>
+        
+        ${mode === "readonly" ? `<p style="margin:8px 0 0">You have view-only access to this page, so your picks won't count. Ask the owner to make you a Contributor.</p>` : ""}</div>
+      <div class="pair" id="pair">${pickHTML(ui.pair[0], "left")}<span class="vs">VS</span>${pickHTML(ui.pair[1], "right")}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span class="muted small">Click a card, or press <kbd>←</kbd> / <kbd>→</kbd>. <kbd>S</kbd> skips. <a href="${vslink(ui.pair[0], ui.pair[1])}">See them side by side</a></span><button class="btn quiet" id="skip" type="button">Skip</button></div>
+      <div class="card"><div class="head"><h2>Latest results</h2></div>
+        <ul class="feed">${last.length ? last.map(v => `<li><b>${esc(byId[v.w].name)}</b> beat ${esc(byId[v.l].name)} · ${ago(v.t)}</li>`).join("") : "<li>No votes yet. Yours will be the first.</li>"}</ul></div>
+    </div>`;
+  }
+
+  // ---------- profile ----------
+  function sparkline(p) {
+    const pts = p.history || [];
+    if (pts.length < 2) return `<p class="muted" style="margin:0">Tracking started ${esc(pts[0] ? pts[0].d : "today")}. The chart fills in with each monthly profile update.</p>`;
+    const W = 600, H = 90, pad = 8, ys = pts.map(h => h.s), lo = Math.min(...ys) - 0.1, hi = Math.max(...ys) + 0.1;
+    const X = i => pad + (i / (pts.length - 1)) * (W - 2 * pad), Y = v => H - pad - ((v - lo) / (hi - lo)) * (H - 2 * pad);
+    const d = pts.map((h, i) => `${i ? "L" : "M"}${X(i).toFixed(1)},${Y(h.s).toFixed(1)}`).join("");
+    return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Algorithm rating from ${fmt(ys[0])} to ${fmt(ys[ys.length - 1])}">
+      <path d="${d} L${X(pts.length - 1)},${H} L${X(0)},${H}Z" fill="var(--accent-soft)"/><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
+      <div class="muted small" style="display:flex;justify-content:space-between"><span>${esc(pts[0].d)} · ${fmt(ys[0])}</span><span>${esc(pts[pts.length - 1].d)} · ${fmt(ys[ys.length - 1])}</span></div>`;
+  }
+  function viewProfile(id) {
+    const p = byId[id];
+    if (!p) return `<div class="card pad"><h1>Not found</h1><p class="muted">Nobody with that id is on the board. <a href="#rankings">Back to rankings</a></p></div>`;
+    const b = p.score, n = model.now, first = p.name.split(" ")[0];
+    const opp = {};
+    for (const v of model.votes) { if (v.w !== id && v.l !== id) continue; const o = v.w === id ? v.l : v.w; opp[o] = opp[o] || { w: 0, l: 0 }; v.w === id ? opp[o].w++ : opp[o].l++; }
+    const oppRows = Object.entries(opp).sort((a, c) => (c[1].w + c[1].l) - (a[1].w + a[1].l)).slice(0, 6);
+    const i = n.rank[id] - 1, lo = Math.max(0, Math.min(i - 3, n.order.length - 7));
+    const nearby = n.order.slice(lo, lo + 7);
+    const line = (label, sub, val) => `<tr><td>${label}<small>${sub}</small></td><td class="v">${val}</td></tr>`;
+    const rival = n.order[i - 1] || n.order[i + 1];
+    const played = n.w[id] + n.l[id];
+    const pillar = pl => `<div class="pl"><div class="plh"><b>${esc(pl.name)}</b><span class="tnum"><b>${fmt(pl.pts)}</b> <small>of ${pl.max}</small></span></div>
+      <div class="bar" role="img" aria-label="${fmt(pl.pts)} of ${pl.max}"><i style="width:${Math.max(0, Math.min(100, (pl.pts / pl.max) * 100)).toFixed(1)}%"></i></div>
+      ${pl.items.map(it => `<div class="pli"><span>${esc(it.label)}<small>${esc(it.sub)}${pl.key === "job" && b.current ? ` · ${esc(b.current.tier)}-tier company ${b.current.companyPts}/10 × ${esc(b.current.role)} ${b.current.rolePts}/10` : ""}</small></span><span class="tnum">${sgn(it.pts)}</span></div>`).join("")}
+      ${pl.capped < 0 ? `<div class="pli"><span>Limit<small>This part adds at most ${pl.max}</small></span><span class="tnum">${sgn(pl.capped)}</span></div>` : ""}
+      ${pl.items.length ? "" : `<p class="muted small" style="margin:0">${pl.key === "pace" ? (b.pace ? `About ${b.pace.age}: at or past the typical age for this level, so no bonus (and no penalty).` : "No age or dates on the profile.") : pl.key === "education" ? "No school on the profile." : "Nothing counted."}</p>`}</div>`;
+    return `<div class="pcols">
+      <div class="stack">
+        <div class="card hero">${banner(p)}<div class="body">
+          <div style="min-width:0">${avatar(p)}<h1>${esc(p.name)}${vtick(p)}</h1><p class="hl">${esc(p.headline)}</p>${p.tagline ? `<p class="muted" style="margin:4px 0 0">${esc(p.tagline)}</p>` : ""}
+            <p class="muted" style="margin:8px 0 0">World #${n.rank[id]} of ${P.length.toLocaleString()} · ${n.w[id]} wins, ${n.l[id]} losses${(DATA.companies || []).some(c => c.key === p.coKey) ? ` · <a href="${clink(p.coKey)}">${esc(p.score.current.company)} board</a>` : ""}</p>
+            <p style="margin:8px 0 0;display:flex;gap:12px;flex-wrap:wrap" class="small muted"><span>Moved by votes ${rankChip(rankDelta(id))}</span>${p.photoCredit ? `<span>Photo: <a href="${esc(p.photoCredit)}" target="_blank" rel="noopener">Wikimedia Commons</a></span>` : ""}</p>
+            <div class="acts"><a class="btn primary" href="#vote" data-face="${id}">Vote on ${esc(first)}</a>${rival ? `<a class="btn" href="${vslink(id, rival)}">Compare with ${esc(byId[rival].name.split(" ")[0])}</a>` : ""}<a class="btn" href="#method">How scoring works</a></div></div>
+          <div class="bigcr"><b>${fmt(n.cr[id])}</b><span class="muted small">Cracked Rating, out of 16</span></div>
+        </div></div>
+
+        <div class="card pad"><h2 style="margin-bottom:12px">Score breakdown</h2>
+          ${(b.pillars || []).map(pillar).join("")}
+          <table class="bd" style="margin-top:4px"><tbody>
+          ${line("From the career", "The five parts above", fmt(p.cr))}
+          ${line("Crowd votes", `${n.w[id]} wins, ${n.l[id]} losses · limited to ±${CROWD_CAP}`, sgn(n.off[id]))}
+          <tr class="total"><td>Cracked Rating</td><td class="v">${fmt(n.cr[id])}</td></tr>
+        </tbody></table></div>
+
+        <div class="card pad"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px"><h2>Experience</h2><span class="muted small">${p.source === "scraped" ? `From LinkedIn, ${esc(p.asOf)}` : `Entered by hand, as of ${esc(p.asOf)}`}</span></div>${xpList(p, 99, true)}</div>
+        ${(p.education || []).length ? `<div class="card pad"><h2 style="margin-bottom:8px">Education</h2>${p.education.map(e => `<p style="margin:6px 0 0">${(DATA.schools || []).some(x => x.key === e.key) ? `<a href="${slink(e.key)}">${esc(e.school)}</a>` : esc(e.school)}${e.tier && e.tier !== "other" ? ` <span class="chip flat">${esc(e.tier)}</span>` : ""}<span class="muted small" style="display:block">${esc([e.degree, e.end].filter(Boolean).join(" · "))}</span></p>`).join("")}</div>` : ""}
+        ${p.awards.length ? `<div class="card pad"><h2 style="margin-bottom:8px">Honors and awards</h2>${p.awards.map(a => `<p style="margin:6px 0 0">${esc(a)}</p>`).join("")}</div>` : ""}
+        <div class="card pad"><h2 style="margin-bottom:8px">Algorithm rating over time</h2>${sparkline(p)}</div>
+      </div>
+
+      <aside class="stack">
+        <div class="card"><div class="head"><h2>Votes</h2></div><div style="padding:0 4px 12px">
+          <div class="kv"><span>Total votes</span><b>${played}</b></div><div class="kv"><span>Wins</span><b>${n.w[id]}</b></div><div class="kv"><span>Losses</span><b>${n.l[id]}</b></div>
+          <div class="kv"><span>Win rate</span><b>${played ? Math.round((n.w[id] / played) * 100) + "%" : "–"}</b></div>
+          <div class="kv"><span>Effect on rating</span><b>${sgn(n.off[id])} of ±${CROWD_CAP}</b></div>
+          <div class="kv"><span>Rank without votes</span><b>#${model.start.rank[id]}</b></div>${p.age ? `<div class="kv"><span>Estimated age</span><b>${p.age}</b></div>` : ""}</div></div>
+        <div class="card"><div class="head"><h2>Ranked nearby</h2></div><ul class="near">${nearby.map(o => `<li><a href="${plink(o)}" class="${o === id ? "me" : ""}"><span class="muted tnum">${n.rank[o]}</span>${avatar(byId[o])}<span style="min-width:0"><b>${esc(byId[o].name)}</b><small>${esc(byId[o].headline)}</small></span><b class="tnum">${fmt(n.cr[o])}</b></a></li>`).join("")}</ul></div>
+        <div class="card"><div class="head"><h2>Head to head</h2></div>${oppRows.length ? `<ul class="feed">${oppRows.map(([o, r]) => `<li><b>${r.w}–${r.l}</b> vs <a href="${plink(o)}">${esc(byId[o].name)}</a></li>`).join("")}</ul>` : `<p class="empty">No matchups yet.</p>`}</div>
+      </aside>
+    </div>`;
+  }
+
+  // ---------- scoring page ----------
+  function viewMethod() {
+    const t = DATA.tiers, ex = DATA.examples || [], t0 = DATA.schoolTiers;
+    return `<div class="narrow stack">
+      <div class="card pad"><h1>How scoring works</h1><p class="muted" style="margin:4px 0 0">Ratings run from 1 to 16 and come almost entirely from the career on the profile. Votes can move a rating by at most ${CROWD_CAP}, so the crowd breaks ties but cannot overrule the record.</p></div>
+      <div class="two">
+        <div class="card pad stack"><h2>The formula</h2>
+<pre class="formula">1. Current job      up to 11
+   1 + 10 × (company ÷ 10)^0.6 × (role ÷ 10)^0.85
+   no current job: the last one counts 70%
+   regional remit (EMEA, India…): role −0.7
+
+2. Track record     up to 2
+   25% of the gap to a bigger past role (max 1)
+   founder 0.1 to 0.5 · serial founder 0.3 / 0.5 / 0.7
+   0.15 per other top-tier company (max 0.45)
+   second current role 0.3 · tenure 0.03 a year (max 0.3)
+   climbed 3+ levels 0.2 · board seats 0.1 each (max 0.3)
+
+3. Education        up to 1
+   elite school ${t0.elite.pts} · strong ${t0.strong.pts} · other ${t0.other.pts}
+   doctorate +0.3 · other graduate degree +0.15
+
+4. Pace for age     up to 1
+   (role level − typical level at that age) ÷ 4,
+   scaled by the company. Never negative.
+
+5. Recognition      up to 1
+   Nobel, Fields, Turing 1.0 · olympiad gold 0.4
+   followers up to 0.5
+
+   Crowd votes      ±${CROWD_CAP}</pre>
+          <p style="margin:0">The job is worth more than everything else put together, so a junior person with a perfect resume still ranks below a senior executive at the same company.</p>
+          <p style="margin:0">Age is read from a birth year or graduation year when the profile has one, otherwise from the first job listed. Being young for a level adds points; being older never takes any away.</p>
+          <p style="margin:0">Votes work like a tennis rating: an upset moves more than an expected win, and a clear favourite beating someone ${MISMATCH}+ points lower moves nothing.</p></div>
+        <div class="card pad"><h2 style="margin-bottom:8px">Examples</h2><table class="bd"><tbody>${ex.map(x => `<tr><td>${esc(x.title)}<small>${esc(x.company)}</small></td><td class="v">${fmt(x.cr)}</td></tr>`).join("")}</tbody></table></div>
+      </div>
+      <div class="two">
+        <div class="card pad"><div style="display:flex;justify-content:space-between"><h2>Company tiers</h2><span class="muted small">Points out of 10</span></div>
+          ${TIER_ORDER.filter(k => t[k]).map(k => `<div class="trow">${tier(k)}<span class="n">${t[k].pts.toFixed(1)}</span><span class="muted small">${t[k].examples.map(esc).join(", ")}${k !== "Z" ? "…" : ""}</span></div>`).join("")}</div>
+        <div class="card pad"><div style="display:flex;justify-content:space-between"><h2>Role levels</h2><span class="muted small">Points out of 10</span></div>
+          ${DATA.roles.slice().sort((a, b) => b.pts - a.pts).map(r => `<div class="trow r2"><span>${esc(r.label)}</span><span class="n">${r.pts.toFixed(1)}</span></div>`).join("")}</div>
+      </div>
+      <div class="card pad"><div style="display:flex;justify-content:space-between"><h2>School tiers</h2><span class="muted small">Points added</span></div>
+        ${["elite", "strong", "other"].map(k => `<div class="trow"><span class="tier ${tcls(STIER[k])}">${k === "other" ? "Any" : k[0].toUpperCase() + k.slice(1)}</span><span class="n">${t0[k].pts.toFixed(1)}</span><span class="muted small">${t0[k].examples.map(esc).join(", ")}${k !== "other" ? "…" : ""}</span></div>`).join("")}</div>
+      <p class="muted small" style="margin:4px 16px">A ✶ next to a name means the profile was checked by hand. Photos are from Wikimedia Commons under free licences; each profile links to its source. Data updated ${esc(new Date(DATA.generatedAt).toLocaleDateString())}. ${P.filter(p => p.source === "scraped").length} of ${P.length} profiles come from LinkedIn; the rest were entered by hand from public information.</p>
+    </div>`;
+  }
+
+  // ---------- routing ----------
+  function route() {
+    const h = location.hash.replace(/^#/, "") || "rankings";
+    if (h.startsWith("p-")) return { name: "profile", id: h.slice(2) };
+    if (h.startsWith("c-")) return { name: "company", key: decodeURIComponent(h.slice(2)) };
+    if (h.startsWith("s-")) return { name: "school", key: decodeURIComponent(h.slice(2)) };
+    if (h.startsWith("vs-")) { const [a, b] = h.slice(3).split("~"); return { name: "compare", a, b }; }
+    return { name: ["rankings", "vote", "method", "companies", "schools", "me"].includes(h) ? h : "rankings" };
+  }
+  function render(top) {
+    if (!DATA || !model) return;
+    const r = route();
+    const tab = { company: "companies", school: "schools" }[r.name] || r.name;
+    for (const a of document.querySelectorAll(".tabs a")) { if (a.dataset.tab === tab) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); }
+    if (r.name === "vote" && ui.busy) return;
+    $app.innerHTML = r.name === "vote" ? viewVote() : r.name === "method" ? viewMethod() : r.name === "companies" ? viewCompanies()
+      : r.name === "company" ? viewCompany(r.key) : r.name === "schools" ? viewSchools() : r.name === "school" ? viewSchool(r.key)
+      : r.name === "compare" ? viewCompare(r.a, r.b) : r.name === "me" ? viewMe() : r.name === "profile" ? viewProfile(r.id) : viewRankings();
+    if (top) window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", () => { if (ui.keepPair) ui.keepPair = false; else ui.pair = null; render(true); });
+
+  // Calculator: update the result as you type, without redrawing the form.
+  document.addEventListener("input", e => {
+    const el = e.target; if (!el || !el.dataset || !el.dataset.me) return;
+    ui.me[el.dataset.me] = el.value;
+    try { localStorage.setItem("cracked-me", JSON.stringify(ui.me)); } catch (err) {}
+    const out = document.getElementById("meout"); if (out) out.innerHTML = meResult();
+  });
+
+  // Compare page: picking a name from the list opens that matchup.
+  document.addEventListener("change", e => {
+    const el = e.target; if (!el || el.id !== "vsin") return;
+    const hit = P.find(p => p.name.toLowerCase() === el.value.trim().toLowerCase());
+    if (hit && hit.id !== el.dataset.vs) location.hash = vslink(el.dataset.vs, hit.id);
+  });
+
+  // A photo that fails to load falls back to the initials circle.
+  document.addEventListener("error", e => { const el = e.target; if (el && el.matches && el.matches("img.avatar") && byId[el.dataset.pid]) el.outerHTML = initialsAvatar(byId[el.dataset.pid]); }, true);
+
+  // ---------- events ----------
+  $app.addEventListener("click", e => {
+    const pick = e.target.closest(".pick"); if (pick) return vote(pick.dataset.side);
+    if (e.target.closest("#skip")) { if (!ui.busy) { ui.pair = pickPair(); render(); } return; }
+    if (e.target.closest("#more")) { ui.shown += PAGE; document.getElementById("list").innerHTML = listRows(); return; }
+    const f = e.target.closest("[data-f]"); if (f) { ui.filter = f.dataset.f; ui.shown = PAGE; render(); return; }
+    const pr = e.target.closest("[data-pair]"); if (pr) { ui.pair = pr.dataset.pair.split("~"); ui.keepPair = true; }
+    const face = e.target.closest("[data-face]");
+    if (face) { const id = face.dataset.face, near = model.now.order.filter(x => x !== id).sort((a, b) => Math.abs(model.now.cr[a] - model.now.cr[id]) - Math.abs(model.now.cr[b] - model.now.cr[id])); ui.pair = [id, near[Math.floor(Math.random() * Math.min(6, near.length))]]; ui.keepPair = true; }
+  });
+  $q.addEventListener("input", () => {
+    ui.query = $q.value; ui.shown = PAGE;
+    if (route().name !== "rankings") { location.hash = "rankings"; return; }
+    const list = document.getElementById("list"); if (list) list.innerHTML = listRows();
+  });
+  document.addEventListener("keydown", e => {
+    if (route().name !== "vote" || e.target.matches("input, textarea")) return;
+    if (e.key === "ArrowLeft") { e.preventDefault(); vote("left"); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); vote("right"); }
+    else if ((e.key === "s" || e.key === "S") && !ui.busy) { ui.pair = pickPair(); render(); }
+  });
+
+  function vote(side) {
+    if (ui.busy || !ui.pair || mode === "readonly" || mode === "loading") return;
+    const now = Date.now(); if (now - ui.lastVote < 500) return; ui.lastVote = now;
+    const [a, b] = ui.pair, w = side === "left" ? a : b, l = side === "left" ? b : a;
+    const before = { w: model.now.cr[w], l: model.now.cr[l] };
+    myVotes.push({ w, l, t: now }); if (myVotes.length > MAX_MINE) myVotes = myVotes.slice(-MAX_MINE);
+    save(); compute();
+    ui.busy = true;
+    for (const el of document.querySelectorAll("#pair .pick")) {
+      const isW = el.dataset.id === w;
+      el.classList.add(isW ? "win" : "lose");
+      el.insertAdjacentHTML("beforeend", `<span class="pop ${isW ? "up" : "down"}">${sgn(isW ? model.now.cr[w] - before.w : model.now.cr[l] - before.l)}</span>`);
+    }
+    setTimeout(() => { ui.busy = false; ui.pair = pickPair(); render(); }, 700);
+  }
+
+  // ---------- persistence ----------
+  let saving = false, dirty = false;
+  async function save() {
+    if (mode === "local") { try { localStorage.setItem("cracked-votes", JSON.stringify(myVotes)); } catch (e) {} return; }
+    if (mode !== "shared" || !myRef) return;
+    if (saving) { dirty = true; return; }
+    saving = true;
+    try { await myRef.set({ votes: myVotes, updated: Date.now() }); }
+    catch (e) { if (e && e.code === "invalid_argument") { mode = "readonly"; render(); } }
+    saving = false;
+    if (dirty) { dirty = false; save(); }
+  }
+  function goLocal() {
+    mode = "local";
+    try { const s = JSON.parse(localStorage.getItem("cracked-votes") || "[]"); if (Array.isArray(s)) myVotes = s; } catch (e) {}
+    compute(); render();
+  }
+  async function connect() {
+    try {
+      const [db, user] = await Promise.all([window.claude?.use?.("db") ?? null, window.claude?.use?.("user") ?? null]);
+      if (!db) return goLocal();
+      myId = user ? await user.id() : null;
+      const canWrite = user ? await user.can("data.write") : null;
+      if (myId && canWrite !== false) { myRef = db.doc("votes/" + myId); mode = "shared"; } else mode = "readonly";
+      let first = true;
+      db.collection("votes").limit(1000).onSnapshot(snap => {
+        others.clear();
+        for (const d of snap.docs) {
+          const v = d.data() && d.data().votes;
+          if (!Array.isArray(v)) continue;
+          if (d.id === myId) { if (first && !myVotes.length) myVotes = v.slice(); continue; }
+          others.set(d.id, v);
+        }
+        first = false;
+        compute(); render();
+      }, () => { if (!others.size && !myVotes.length) goLocal(); });
+    } catch (e) { goLocal(); }
+  }
+
+  // ---------- boot ----------
+  window.__cracked = { get model() { return model; }, get mode() { return mode; } };
+  fetch("data/people.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(d => {
+    DATA = d; P = d.people; byId = Object.fromEntries(P.map(p => [p.id, p]));
+    compute(); render(); connect();
+    setInterval(() => { const n = route().name; if (n !== "vote" && n !== "me" && document.activeElement !== $q && window.scrollY < 200) { compute(); render(); } }, 60000);
+  }).catch(() => { $app.innerHTML = `<div class="card pad">The rankings data didn't load. Reload the page to try again.</div>`; });
+})();
+</script>
+
+</body>
+</html>
