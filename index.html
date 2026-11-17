@@ -9,6 +9,7 @@
 <style>body{margin:0}</style>
 </head>
 <body>
+<script>window.CRACKED_SUPABASE = {"url":"https://flhkgldccjnuizkgsizg.supabase.co","key":"sb_publishable_DW_jVRyrOpwAR29tfYtPSA_ewjQkjis"};</script>
 <style>
 /* Layout: a professional-network feed. White top bar (logo, search, icon tabs), three columns on the rankings page
    (summary card, ranked list, news rail), profile pages with banner + overlapping avatar. Light theme only, by design. */
@@ -696,7 +697,7 @@ return module.exports; })();
           ${evs.length ? `<ul class="moves">${evs.map(e => `<li><a href="${plink(e.id)}">${esc(byId[e.id].name)}</a><span>${esc(e.to.title)}, ${esc(e.to.company)} ${crChip(e.delta)}</span><span class="muted small">Was ${esc(e.from.title)}, ${esc(e.from.company)} · ${esc(e.d)}</span></li>`).join("")}</ul>`
             : `<p class="empty">No job changes yet. Promotions, new jobs and exits found by the monthly profile update appear here.</p>`}
         </div>
-        <p class="muted small" style="margin:4px 16px">${mode === "shared" ? "Votes are live and shared with everyone on this page." : mode === "local" ? "Votes are saved on this device only." : mode === "readonly" ? "You have view-only access, so you can't vote." : "Connecting to shared votes…"}</p>
+        <p class="muted small" style="margin:4px 16px">${mode === "shared" || mode === "supa" ? "Votes are live and shared with everyone on this page." : mode === "local" ? "Votes are saved on this device only." : mode === "readonly" ? "You have view-only access, so you can't vote." : "Connecting to shared votes…"}</p>
       </aside>
     </div>`;
   }
@@ -1100,8 +1101,53 @@ return module.exports; })();
   }
 
   // ---------- persistence ----------
+  // Three places votes can live: Claude's shared store (inside Claude), a Supabase table (the public website,
+  // when window.CRACKED_SUPABASE is set), or this browser only.
+  const SUPA = window.CRACKED_SUPABASE && window.CRACKED_SUPABASE.url && window.CRACKED_SUPABASE.key ? window.CRACKED_SUPABASE : null;
+  let supaLast = 0, supaTimer = null;
+  const supaFetch = (q, opts = {}) => fetch(`${SUPA.url.replace(/\/+$/, "")}/rest/v1/${q}`, { ...opts, headers: { apikey: SUPA.key, "Content-Type": "application/json", ...(opts.headers || {}) } });
+  function supaAdd(rows, initial) {
+    for (const r of rows) {
+      supaLast = Math.max(supaLast, r.id);
+      const v = { w: r.w, l: r.l, t: Date.parse(r.t) };
+      if (r.voter === myId) { if (initial) myVotes.push(v); continue; } // our own new votes are already in myVotes
+      if (!others.has(r.voter)) others.set(r.voter, []);
+      others.get(r.voter).push(v);
+    }
+  }
+  async function supaPoll() {
+    try {
+      const res = await supaFetch(`votes?select=id,w,l,voter,t&id=gt.${supaLast}&order=id&limit=1000`);
+      if (res.ok) { const rows = await res.json(); if (rows.length) { supaAdd(rows, false); compute(); if (route().name !== "vote" && route().name !== "me") render(); } }
+    } catch (e) {}
+  }
+  async function goSupa() {
+    try { myId = localStorage.getItem("cracked-voter"); } catch (e) {}
+    if (!myId) { myId = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now()); try { localStorage.setItem("cracked-voter", myId); } catch (e) {} }
+    try {
+      for (let page = 0; page < 200; page++) {
+        const res = await supaFetch(`votes?select=id,w,l,voter,t&id=gt.${supaLast}&order=id&limit=1000`);
+        if (!res.ok) throw new Error(res.status);
+        const rows = await res.json();
+        supaAdd(rows, true);
+        if (rows.length < 1000) break;
+      }
+    } catch (e) { return goLocal(); }
+    mode = "supa"; compute(); render();
+    supaTimer = setInterval(supaPoll, 20000);
+  }
+  async function supaSave(v) {
+    try {
+      const res = await supaFetch("votes", { method: "POST", headers: { Prefer: "return=minimal" }, body: JSON.stringify({ w: v.w, l: v.l, voter: myId }) });
+      if (res.ok) return;
+    } catch (e) {}
+    // Refused (too many votes in a minute) or offline: take the vote back out so the board matches the server.
+    myVotes = myVotes.filter(x => x !== v); compute();
+    if (route().name !== "vote") render();
+  }
   let saving = false, dirty = false;
   async function save() {
+    if (mode === "supa") { const v = myVotes[myVotes.length - 1]; if (v) supaSave(v); return; }
     if (mode === "local") { try { localStorage.setItem("cracked-votes", JSON.stringify(myVotes)); } catch (e) {} return; }
     if (mode !== "shared" || !myRef) return;
     if (saving) { dirty = true; return; }
@@ -1119,7 +1165,7 @@ return module.exports; })();
   async function connect() {
     try {
       const [db, user] = await Promise.all([window.claude?.use?.("db") ?? null, window.claude?.use?.("user") ?? null]);
-      if (!db) return goLocal();
+      if (!db) return SUPA ? goSupa() : goLocal();
       myId = user ? await user.id() : null;
       const canWrite = user ? await user.can("data.write") : null;
       if (myId && canWrite !== false) { myRef = db.doc("votes/" + myId); mode = "shared"; } else mode = "readonly";
@@ -1135,7 +1181,7 @@ return module.exports; })();
         first = false;
         compute(); render();
       }, () => { if (!others.size && !myVotes.length) goLocal(); });
-    } catch (e) { goLocal(); }
+    } catch (e) { SUPA ? goSupa() : goLocal(); }
   }
 
   // ---------- boot ----------
